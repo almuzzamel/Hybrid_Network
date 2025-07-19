@@ -1,0 +1,3 @@
+package abcd;
+
+@license(LGPL);

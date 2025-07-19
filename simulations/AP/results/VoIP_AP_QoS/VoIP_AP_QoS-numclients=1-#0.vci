@@ -1,0 +1,1774 @@
+file 15553054 1752599283                                        
+version 3
+run VoIP_AP_QoS-0-20250715-18:57:39-13920
+attr configname VoIP_AP_QoS
+attr datetime 20250715-18:57:39
+attr datetimef 20250715-185739
+attr experiment VoIP_AP_QoS
+attr inifile static_ap.ini
+attr iterationvars $numclients=1
+attr iterationvarsd numclients=1
+attr iterationvarsf numclients=1-
+attr measurement $numclients=1
+attr network abcd.simulations.StaticAP
+attr processid 13920
+attr repetition 0
+attr replication #0
+attr resultdir results/VoIP_AP_QoS
+attr runnumber 0
+attr seedset 0
+itervar numclients 1
+config image-path ../../../inet4.5/images;../../../simu5g/images
+config result-dir results/VoIP_AP_QoS
+config **.client[*].app[*].*.endToEndDelay:vector.vector-recording true
+config **.client[*].app[*].*.jitter:vector.vector-recording true
+config **.client[*].app[*].*.packetLoss:vector.vector-recording true
+config **.server.app[*].*.endToEndDelay:vector.vector-recording true
+config **.server.app[*].*.jitter:vector.vector-recording true
+config **.server.app[*].*.packetLoss:vector.vector-recording true
+config **.VoIPReceiver.endToEndDelay:vector.vector-recording true
+config **.VoIPReceiver.jitter:vector.vector-recording true
+config **.numclient 1
+config *.client[*].mobility.initFromDisplayString true
+config *.client[*].mobility.initialX uniform(500m,500m)
+config *.client[*].mobility.initialY uniform(500m,500m)
+config *.client[*].mobility.initialZ 0m
+config *.client[*].mobility.speed 0mps
+config *.client[*].mobility.typename StationaryMobility
+config *.client[*].numApps 3
+config *.server.numApps 3
+config *.client[*].app[2].typename UdpBasicApp
+config *.client[*].app[2].destAddresses "\"server\""
+config *.client[*].app[2].destPort 5000
+config *.client[*].app[2].messageLength 1024B
+config *.client[*].app[2].sendInterval 0.01s
+config *.client[*].app[2].startTime "uniform(0s, 0.1s)"
+config *.server.app[2].typename UdpSink
+config *.server.app[2].localPort 5000
+config *.server.app[0].typename VoIPReceiver
+config *.server.app[0].localPort 4000
+config *.client[*].app[1].typename VoIPSender
+config *.clinte[*].app[1].qosClass "\"Voice\""
+config *.clinte[*].app[1].dscpMark 46
+config *.clinte[*].app[1].tos 0xE0
+config *.client[*].app[1].PacketSize 320
+config *.client[*].app[1].destAddress "\"server\""
+config *.client[*].app[1].destPort 4000
+config *.client[*].app[1].localPort 4088
+config *.client[*].app[1].sendInterval 0.01ms
+config *.client[*].app[1].startTime uniform(0s,0.02s)
+config *.client[*].app[0].typename VoIPReceiver
+config *.client[*].app[0].localPort 3000
+config *.server.app[1].typename VoIPSender
+config *.server.app[1].PacketSize 320
+config *.server.app[1].qosClass "\"Voice\""
+config *.server.app[1].dscpMark 46
+config *.server.app[1].tos 0xE0
+config *.server.app[1].destAddress "\"client[0]\""
+config *.server.app[1].destPort 3000
+config *.server.app[1].localPort 3088
+config *.server.app[1].sendInterval 0.01ms
+config *.server.app[1].startTime uniform(0s,0.02s)
+config *.wifiRouter.ipv4.config.filters "xml(\"<filters>\" + \n    \"<filter name='VoIP' proto='udp' destPort='3000,4000'/>\" +\n    \"</filters>\")"
+config *.wifiRouter.eth[*].queue.typename DiffservQueue
+config *.wifiRouter.eth[*].queue.packetCapacity 100
+config *.wifiRouter.eth[*].queue.bufferSize 2MB
+config *.wifiRouter.eth[*].queue.numQueues 4
+config *.wifiRouter.eth[*].queue.classifier.typename DiffservClassifier
+config *.wifiRouter.eth[*].queue.scheduler.typename WrrScheduler
+config *.wifiRouter.eth[*].queue.scheduler.weights "\"4 3 2 1\""
+config *.app[*].dscpMark 46
+config *.wifiRouter.eth[*].queue.queue[0].typename DropTailQueue
+config *.wifiRouter.eth[*].queue.queue[0].packetCapacity 100
+config *.wifiRouter.eth[*].queue.queue[1].typename REDQueue
+config *.wifiRouter.eth[*].queue.queue[1].packetCapacity 200
+config *.wifiRouter.eth[*].queue.queue[2].typename REDQueue
+config *.wifiRouter.eth[*].queue.queue[2].packetCapacity 300
+config *.wifiRouter.eth[*].queue.queue[3].typename DropTailQueue
+config *.wifiRouter.eth[*].queue.queue[3].packetCapacity 400
+config *.accessPoint.wlan[0].mac.typename Ieee80211Mac
+config *.accessPoint.wlan[0].mac.qosStation true
+config *.accessPoint.wlan[0].mac.ctrl.typename Ieee80211MacCtrl
+config *.accessPoint.wlan[0].mac.dcf.channelAccess.typename EdcaChannelAccess
+config *.client[*].wlan[0].mac.typename Ieee80211Mac
+config *.client[*].wlan[0].mac.qosStation true
+config *.client[*].wlan[0].mac.ctrl.typename Ieee80211MacCtrl
+config *.client[*].wlan[0].mac.dcf.channelAccess.typename EdcaChannelAccess
+config *.*.wlan[0].mac.dcf.edca.edcaf[0].priority 6
+config *.*.wlan[0].mac.dcf.edca.edcaf[0].aifsn 2
+config *.*.wlan[0].mac.dcf.edca.edcaf[0].cwMin 7
+config *.*.wlan[0].mac.dcf.edca.edcaf[0].cwMax 15
+config *.*.wlan[0].mac.dcf.edca.edcaf[0].txopLimit 3264us
+config *.wifiRouter.eth[*].queue.*.packetDropped.scalar-recording true
+config *.mac.*.queueingTime.scalar-recording true
+config *.mac.*.txPk.scalar-recording true
+config *.mac.*.rxPkOk.scalar-recording true
+config *.app[*].playoutDelay.scalar-recording true
+config *.app[*].playoutLoss.scalar-recording true
+config *.app[*].mosScore.scalar-recording true
+config network abcd.simulations.StaticAP
+config sim-time-limit 20s
+config warmup-period 1.5s
+config **.vector-recording true
+config **.scalar-recording true
+config **.bin-recording true
+config **.mobility.constraintAreaMinZ 0m
+config **.mobility.constraintAreaMaxZ 0m
+config **.mobility.initFromDisplayString true
+config *.visualizer.*.mediumVisualizer.displaySignals true
+config *.visualizer.*.mediumVisualizer.displayTransmissions true
+config *.visualizer.*.mediumVisualizer.displayReceptions true
+config *.visualizer.*.networkRouteVisualizer.displayRoutes trclient
+config *.visualizer.*.networkRouteVisualizer.packetFilter "\"*VoIP*\""
+config *.visualizer.*.networkRouteVisualizer.lineColor "\"blue\""
+config *.visualizer.*.mobilityVisualizer.displayVelocities true
+config *.visualizer.*.mobilityVisualizer.displayMovementTrails true
+config *.visualizer.*.interfaceTableVisualizer.displayInterfaceTables true
+config *.visualizer.*.ieee80211Visualizer.displayAssociations true
+config *.visualizer.mediumVisualizer.displaySignals true
+config *.radioMedium.backgroundNoise.power -100dBm
+config *.accessPoint.wlan[0].radio.transmitter.power 4mW
+config *.ccessPoint.wlan[0].radio.transmitter.communicationRange 200m
+config *.accessPoint.wlan[0].radio.receiver.sensitivity -95dBm
+config *.wifiRouter.eth[*].queue.typename DropTailQueue
+config *.wifiRouter.eth[*].queue.packetCapacity 100
+config *.wifiRouter.eth[*].queue.frameCapacity 100
+config *.wifiRouter.eth[*].queue.packetDropperFunction "\"uniform(0, 1) < 0.02\""
+
+vector 0 StaticAP.server.eth[0].queue queueLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + count(packetPushStarted) - count(packetPulled) - count(packetRemoved) - count(packetDropped)))"
+attr title "queue length"
+attr unit pk
+vector 1 StaticAP.server.eth[0].queue queueBitLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + sum(packetLength(packetPushStarted)) - sum(packetLength(packetPulled)) - sum(packetLength(packetRemoved)) - sum(packetLength(packetDropped))))"
+attr title "queue bit length"
+attr unit b
+vector 2 StaticAP.server.udp passedUpPk:vector(count) ETV
+attr interpolationmode none
+attr recordingmode vector(count)
+attr source packetSentToUpper
+attr title "packets passed up, count"
+vector 3 StaticAP.server.udp droppedPkWrongPort:vector(count) ETV
+attr interpolationmode none
+attr recordingmode vector(count)
+attr source packetDropReasonIsNoPortFound(packetDropped)
+attr title "packets dropped (wrong port), count"
+vector 4 StaticAP.server.udp droppedPkBadChecksum:vector(count) ETV
+attr interpolationmode none
+attr recordingmode vector(count)
+attr source packetDropReasonIsIncorrectlyReceived(packetDropped)
+attr title "packets dropped (checksum error), count"
+vector 5 StaticAP.wifiRouter.eth[0].queue queueLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(localSignal(packetPushEnded)) + count(localSignal(packetPushStarted)) - count(localSignal(packetPulled)) - count(localSignal(packetRemoved)) - count(localSignal(packetDropped))))"
+attr title "queue length"
+attr unit pk
+vector 6 StaticAP.wifiRouter.eth[0].queue queueBitLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(localSignal(packetPushEnded)) + sum(packetLength(localSignal(packetPushStarted))) - sum(packetLength(localSignal(packetPulled))) - sum(packetLength(localSignal(packetRemoved))) - sum(packetLength(localSignal(packetDropped)))))"
+attr title "queue bit length"
+attr unit b
+vector 7 StaticAP.wifiRouter.eth[0].queue.efQueue queueLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + count(packetPushStarted) - count(packetPulled) - count(packetRemoved) - count(packetDropped)))"
+attr title "queue length"
+attr unit pk
+vector 8 StaticAP.wifiRouter.eth[0].queue.efQueue queueBitLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + sum(packetLength(packetPushStarted)) - sum(packetLength(packetPulled)) - sum(packetLength(packetRemoved)) - sum(packetLength(packetDropped))))"
+attr title "queue bit length"
+attr unit b
+vector 9 StaticAP.wifiRouter.eth[0].queue.af1xQueue.queue queueLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + count(packetPushStarted) - count(packetPulled) - count(packetRemoved) - count(packetDropped)))"
+attr title "queue length"
+attr unit pk
+vector 10 StaticAP.wifiRouter.eth[0].queue.af1xQueue.queue queueBitLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + sum(packetLength(packetPushStarted)) - sum(packetLength(packetPulled)) - sum(packetLength(packetRemoved)) - sum(packetLength(packetDropped))))"
+attr title "queue bit length"
+attr unit b
+vector 11 StaticAP.wifiRouter.eth[0].queue.af2xQueue.queue queueLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + count(packetPushStarted) - count(packetPulled) - count(packetRemoved) - count(packetDropped)))"
+attr title "queue length"
+attr unit pk
+vector 12 StaticAP.wifiRouter.eth[0].queue.af2xQueue.queue queueBitLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + sum(packetLength(packetPushStarted)) - sum(packetLength(packetPulled)) - sum(packetLength(packetRemoved)) - sum(packetLength(packetDropped))))"
+attr title "queue bit length"
+attr unit b
+vector 13 StaticAP.wifiRouter.eth[0].queue.af3xQueue.queue queueLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + count(packetPushStarted) - count(packetPulled) - count(packetRemoved) - count(packetDropped)))"
+attr title "queue length"
+attr unit pk
+vector 14 StaticAP.wifiRouter.eth[0].queue.af3xQueue.queue queueBitLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + sum(packetLength(packetPushStarted)) - sum(packetLength(packetPulled)) - sum(packetLength(packetRemoved)) - sum(packetLength(packetDropped))))"
+attr title "queue bit length"
+attr unit b
+vector 15 StaticAP.wifiRouter.eth[0].queue.af4xQueue.queue queueLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + count(packetPushStarted) - count(packetPulled) - count(packetRemoved) - count(packetDropped)))"
+attr title "queue length"
+attr unit pk
+vector 16 StaticAP.wifiRouter.eth[0].queue.af4xQueue.queue queueBitLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + sum(packetLength(packetPushStarted)) - sum(packetLength(packetPulled)) - sum(packetLength(packetRemoved)) - sum(packetLength(packetDropped))))"
+attr title "queue bit length"
+attr unit b
+vector 17 StaticAP.wifiRouter.eth[0].queue.beQueue queueLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + count(packetPushStarted) - count(packetPulled) - count(packetRemoved) - count(packetDropped)))"
+attr title "queue length"
+attr unit pk
+vector 18 StaticAP.wifiRouter.eth[0].queue.beQueue queueBitLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + sum(packetLength(packetPushStarted)) - sum(packetLength(packetPulled)) - sum(packetLength(packetRemoved)) - sum(packetLength(packetDropped))))"
+attr title "queue bit length"
+attr unit b
+vector 19 StaticAP.wifiRouter.eth[1].queue queueLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(localSignal(packetPushEnded)) + count(localSignal(packetPushStarted)) - count(localSignal(packetPulled)) - count(localSignal(packetRemoved)) - count(localSignal(packetDropped))))"
+attr title "queue length"
+attr unit pk
+vector 20 StaticAP.wifiRouter.eth[1].queue queueBitLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(localSignal(packetPushEnded)) + sum(packetLength(localSignal(packetPushStarted))) - sum(packetLength(localSignal(packetPulled))) - sum(packetLength(localSignal(packetRemoved))) - sum(packetLength(localSignal(packetDropped)))))"
+attr title "queue bit length"
+attr unit b
+vector 21 StaticAP.wifiRouter.eth[1].queue.efQueue queueLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + count(packetPushStarted) - count(packetPulled) - count(packetRemoved) - count(packetDropped)))"
+attr title "queue length"
+attr unit pk
+vector 22 StaticAP.wifiRouter.eth[1].queue.efQueue queueBitLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + sum(packetLength(packetPushStarted)) - sum(packetLength(packetPulled)) - sum(packetLength(packetRemoved)) - sum(packetLength(packetDropped))))"
+attr title "queue bit length"
+attr unit b
+vector 23 StaticAP.wifiRouter.eth[1].queue.af1xQueue.queue queueLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + count(packetPushStarted) - count(packetPulled) - count(packetRemoved) - count(packetDropped)))"
+attr title "queue length"
+attr unit pk
+vector 24 StaticAP.wifiRouter.eth[1].queue.af1xQueue.queue queueBitLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + sum(packetLength(packetPushStarted)) - sum(packetLength(packetPulled)) - sum(packetLength(packetRemoved)) - sum(packetLength(packetDropped))))"
+attr title "queue bit length"
+attr unit b
+vector 25 StaticAP.wifiRouter.eth[1].queue.af2xQueue.queue queueLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + count(packetPushStarted) - count(packetPulled) - count(packetRemoved) - count(packetDropped)))"
+attr title "queue length"
+attr unit pk
+vector 26 StaticAP.wifiRouter.eth[1].queue.af2xQueue.queue queueBitLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + sum(packetLength(packetPushStarted)) - sum(packetLength(packetPulled)) - sum(packetLength(packetRemoved)) - sum(packetLength(packetDropped))))"
+attr title "queue bit length"
+attr unit b
+vector 27 StaticAP.wifiRouter.eth[1].queue.af3xQueue.queue queueLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + count(packetPushStarted) - count(packetPulled) - count(packetRemoved) - count(packetDropped)))"
+attr title "queue length"
+attr unit pk
+vector 28 StaticAP.wifiRouter.eth[1].queue.af3xQueue.queue queueBitLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + sum(packetLength(packetPushStarted)) - sum(packetLength(packetPulled)) - sum(packetLength(packetRemoved)) - sum(packetLength(packetDropped))))"
+attr title "queue bit length"
+attr unit b
+vector 29 StaticAP.wifiRouter.eth[1].queue.af4xQueue.queue queueLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + count(packetPushStarted) - count(packetPulled) - count(packetRemoved) - count(packetDropped)))"
+attr title "queue length"
+attr unit pk
+vector 30 StaticAP.wifiRouter.eth[1].queue.af4xQueue.queue queueBitLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + sum(packetLength(packetPushStarted)) - sum(packetLength(packetPulled)) - sum(packetLength(packetRemoved)) - sum(packetLength(packetDropped))))"
+attr title "queue bit length"
+attr unit b
+vector 31 StaticAP.wifiRouter.eth[1].queue.beQueue queueLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + count(packetPushStarted) - count(packetPulled) - count(packetRemoved) - count(packetDropped)))"
+attr title "queue length"
+attr unit pk
+vector 32 StaticAP.wifiRouter.eth[1].queue.beQueue queueBitLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + sum(packetLength(packetPushStarted)) - sum(packetLength(packetPulled)) - sum(packetLength(packetRemoved)) - sum(packetLength(packetDropped))))"
+attr title "queue bit length"
+attr unit b
+vector 33 StaticAP.accessPoint.wlan[0].mac.dcf frameSequenceActive:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source warmup(count(frameSequenceStarted)-count(frameSequenceFinished))
+attr title "frame sequence active"
+vector 34 StaticAP.accessPoint.wlan[0].mac.dcf.channelAccess.pendingQueue queueLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + count(packetPushStarted) - count(packetPulled) - count(packetRemoved) - count(packetDropped)))"
+attr title "queue length"
+attr unit pk
+vector 35 StaticAP.accessPoint.wlan[0].mac.dcf.channelAccess.pendingQueue queueBitLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + sum(packetLength(packetPushStarted)) - sum(packetLength(packetPulled)) - sum(packetLength(packetRemoved)) - sum(packetLength(packetDropped))))"
+attr title "queue bit length"
+attr unit b
+vector 36 StaticAP.accessPoint.wlan[0].mac.dcf.channelAccess.inProgressFrames queueLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(count(packetEnqueued) - count(packetDequeued))"
+attr title "queue length"
+vector 37 StaticAP.accessPoint.wlan[0].mac.dcf.channelAccess.contention backoffActive:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source warmup(count(backoffStarted)-count(backoffStopped))
+attr title "backoff active"
+vector 38 StaticAP.accessPoint.wlan[0].mac.hcf frameSequenceActive:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source warmup(count(frameSequenceStarted)-count(frameSequenceFinished))
+attr title "frame sequence active"
+vector 39 StaticAP.accessPoint.wlan[0].mac.hcf blockAckAgreementActive:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source warmup(count(blockAckAgreementAdded)-count(blockAckAgreementDeleted))
+attr title "active block ack agreements"
+vector 40 StaticAP.accessPoint.wlan[0].mac.hcf.edca.edcaf[0].pendingQueue queueLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + count(packetPushStarted) - count(packetPulled) - count(packetRemoved) - count(packetDropped)))"
+attr title "queue length"
+attr unit pk
+vector 41 StaticAP.accessPoint.wlan[0].mac.hcf.edca.edcaf[0].pendingQueue queueBitLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + sum(packetLength(packetPushStarted)) - sum(packetLength(packetPulled)) - sum(packetLength(packetRemoved)) - sum(packetLength(packetDropped))))"
+attr title "queue bit length"
+attr unit b
+vector 42 StaticAP.accessPoint.wlan[0].mac.hcf.edca.edcaf[0].inProgressFrames queueLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(count(packetEnqueued) - count(packetDequeued))"
+attr title "queue length"
+vector 43 StaticAP.accessPoint.wlan[0].mac.hcf.edca.edcaf[0].contention backoffActive:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source warmup(count(backoffStarted)-count(backoffStopped))
+attr title "backoff active"
+vector 44 StaticAP.accessPoint.wlan[0].mac.hcf.edca.edcaf[0].txopProcedure txopActive:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source warmup(count(txopStarted)-count(txopEnded))
+attr title "txop active"
+vector 45 StaticAP.accessPoint.wlan[0].mac.hcf.edca.edcaf[1].pendingQueue queueLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + count(packetPushStarted) - count(packetPulled) - count(packetRemoved) - count(packetDropped)))"
+attr title "queue length"
+attr unit pk
+vector 46 StaticAP.accessPoint.wlan[0].mac.hcf.edca.edcaf[1].pendingQueue queueBitLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + sum(packetLength(packetPushStarted)) - sum(packetLength(packetPulled)) - sum(packetLength(packetRemoved)) - sum(packetLength(packetDropped))))"
+attr title "queue bit length"
+attr unit b
+vector 47 StaticAP.accessPoint.wlan[0].mac.hcf.edca.edcaf[1].inProgressFrames queueLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(count(packetEnqueued) - count(packetDequeued))"
+attr title "queue length"
+vector 48 StaticAP.accessPoint.wlan[0].mac.hcf.edca.edcaf[1].contention backoffActive:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source warmup(count(backoffStarted)-count(backoffStopped))
+attr title "backoff active"
+vector 49 StaticAP.accessPoint.wlan[0].mac.hcf.edca.edcaf[1].txopProcedure txopActive:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source warmup(count(txopStarted)-count(txopEnded))
+attr title "txop active"
+vector 50 StaticAP.accessPoint.wlan[0].mac.hcf.edca.edcaf[2].pendingQueue queueLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + count(packetPushStarted) - count(packetPulled) - count(packetRemoved) - count(packetDropped)))"
+attr title "queue length"
+attr unit pk
+vector 51 StaticAP.accessPoint.wlan[0].mac.hcf.edca.edcaf[2].pendingQueue queueBitLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + sum(packetLength(packetPushStarted)) - sum(packetLength(packetPulled)) - sum(packetLength(packetRemoved)) - sum(packetLength(packetDropped))))"
+attr title "queue bit length"
+attr unit b
+vector 52 StaticAP.accessPoint.wlan[0].mac.hcf.edca.edcaf[2].inProgressFrames queueLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(count(packetEnqueued) - count(packetDequeued))"
+attr title "queue length"
+vector 53 StaticAP.accessPoint.wlan[0].mac.hcf.edca.edcaf[2].contention backoffActive:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source warmup(count(backoffStarted)-count(backoffStopped))
+attr title "backoff active"
+vector 54 StaticAP.accessPoint.wlan[0].mac.hcf.edca.edcaf[2].txopProcedure txopActive:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source warmup(count(txopStarted)-count(txopEnded))
+attr title "txop active"
+vector 55 StaticAP.accessPoint.wlan[0].mac.hcf.edca.edcaf[3].pendingQueue queueLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + count(packetPushStarted) - count(packetPulled) - count(packetRemoved) - count(packetDropped)))"
+attr title "queue length"
+attr unit pk
+vector 56 StaticAP.accessPoint.wlan[0].mac.hcf.edca.edcaf[3].pendingQueue queueBitLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + sum(packetLength(packetPushStarted)) - sum(packetLength(packetPulled)) - sum(packetLength(packetRemoved)) - sum(packetLength(packetDropped))))"
+attr title "queue bit length"
+attr unit b
+vector 57 StaticAP.accessPoint.wlan[0].mac.hcf.edca.edcaf[3].inProgressFrames queueLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(count(packetEnqueued) - count(packetDequeued))"
+attr title "queue length"
+vector 58 StaticAP.accessPoint.wlan[0].mac.hcf.edca.edcaf[3].contention backoffActive:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source warmup(count(backoffStarted)-count(backoffStopped))
+attr title "backoff active"
+vector 59 StaticAP.accessPoint.wlan[0].mac.hcf.edca.edcaf[3].txopProcedure txopActive:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source warmup(count(txopStarted)-count(txopEnded))
+attr title "txop active"
+vector 60 StaticAP.accessPoint.eth[0].queue queueLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + count(packetPushStarted) - count(packetPulled) - count(packetRemoved) - count(packetDropped)))"
+attr title "queue length"
+attr unit pk
+vector 61 StaticAP.accessPoint.eth[0].queue queueBitLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + sum(packetLength(packetPushStarted)) - sum(packetLength(packetPulled)) - sum(packetLength(packetRemoved)) - sum(packetLength(packetDropped))))"
+attr title "queue bit length"
+attr unit b
+vector 62 StaticAP.client[0].wlan[0].mac.dcf frameSequenceActive:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source warmup(count(frameSequenceStarted)-count(frameSequenceFinished))
+attr title "frame sequence active"
+vector 63 StaticAP.client[0].wlan[0].mac.dcf.channelAccess.pendingQueue queueLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + count(packetPushStarted) - count(packetPulled) - count(packetRemoved) - count(packetDropped)))"
+attr title "queue length"
+attr unit pk
+vector 64 StaticAP.client[0].wlan[0].mac.dcf.channelAccess.pendingQueue queueBitLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + sum(packetLength(packetPushStarted)) - sum(packetLength(packetPulled)) - sum(packetLength(packetRemoved)) - sum(packetLength(packetDropped))))"
+attr title "queue bit length"
+attr unit b
+vector 65 StaticAP.client[0].wlan[0].mac.dcf.channelAccess.inProgressFrames queueLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(count(packetEnqueued) - count(packetDequeued))"
+attr title "queue length"
+vector 66 StaticAP.client[0].wlan[0].mac.dcf.channelAccess.contention backoffActive:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source warmup(count(backoffStarted)-count(backoffStopped))
+attr title "backoff active"
+vector 67 StaticAP.client[0].wlan[0].mac.hcf frameSequenceActive:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source warmup(count(frameSequenceStarted)-count(frameSequenceFinished))
+attr title "frame sequence active"
+vector 68 StaticAP.client[0].wlan[0].mac.hcf blockAckAgreementActive:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source warmup(count(blockAckAgreementAdded)-count(blockAckAgreementDeleted))
+attr title "active block ack agreements"
+vector 69 StaticAP.client[0].wlan[0].mac.hcf.edca.edcaf[0].pendingQueue queueLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + count(packetPushStarted) - count(packetPulled) - count(packetRemoved) - count(packetDropped)))"
+attr title "queue length"
+attr unit pk
+vector 70 StaticAP.client[0].wlan[0].mac.hcf.edca.edcaf[0].pendingQueue queueBitLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + sum(packetLength(packetPushStarted)) - sum(packetLength(packetPulled)) - sum(packetLength(packetRemoved)) - sum(packetLength(packetDropped))))"
+attr title "queue bit length"
+attr unit b
+vector 71 StaticAP.client[0].wlan[0].mac.hcf.edca.edcaf[0].inProgressFrames queueLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(count(packetEnqueued) - count(packetDequeued))"
+attr title "queue length"
+vector 72 StaticAP.client[0].wlan[0].mac.hcf.edca.edcaf[0].contention backoffActive:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source warmup(count(backoffStarted)-count(backoffStopped))
+attr title "backoff active"
+vector 73 StaticAP.client[0].wlan[0].mac.hcf.edca.edcaf[0].txopProcedure txopActive:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source warmup(count(txopStarted)-count(txopEnded))
+attr title "txop active"
+vector 74 StaticAP.client[0].wlan[0].mac.hcf.edca.edcaf[1].pendingQueue queueLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + count(packetPushStarted) - count(packetPulled) - count(packetRemoved) - count(packetDropped)))"
+attr title "queue length"
+attr unit pk
+vector 75 StaticAP.client[0].wlan[0].mac.hcf.edca.edcaf[1].pendingQueue queueBitLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + sum(packetLength(packetPushStarted)) - sum(packetLength(packetPulled)) - sum(packetLength(packetRemoved)) - sum(packetLength(packetDropped))))"
+attr title "queue bit length"
+attr unit b
+vector 76 StaticAP.client[0].wlan[0].mac.hcf.edca.edcaf[1].inProgressFrames queueLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(count(packetEnqueued) - count(packetDequeued))"
+attr title "queue length"
+vector 77 StaticAP.client[0].wlan[0].mac.hcf.edca.edcaf[1].contention backoffActive:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source warmup(count(backoffStarted)-count(backoffStopped))
+attr title "backoff active"
+vector 78 StaticAP.client[0].wlan[0].mac.hcf.edca.edcaf[1].txopProcedure txopActive:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source warmup(count(txopStarted)-count(txopEnded))
+attr title "txop active"
+vector 79 StaticAP.client[0].wlan[0].mac.hcf.edca.edcaf[2].pendingQueue queueLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + count(packetPushStarted) - count(packetPulled) - count(packetRemoved) - count(packetDropped)))"
+attr title "queue length"
+attr unit pk
+vector 80 StaticAP.client[0].wlan[0].mac.hcf.edca.edcaf[2].pendingQueue queueBitLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + sum(packetLength(packetPushStarted)) - sum(packetLength(packetPulled)) - sum(packetLength(packetRemoved)) - sum(packetLength(packetDropped))))"
+attr title "queue bit length"
+attr unit b
+vector 81 StaticAP.client[0].wlan[0].mac.hcf.edca.edcaf[2].inProgressFrames queueLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(count(packetEnqueued) - count(packetDequeued))"
+attr title "queue length"
+vector 82 StaticAP.client[0].wlan[0].mac.hcf.edca.edcaf[2].contention backoffActive:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source warmup(count(backoffStarted)-count(backoffStopped))
+attr title "backoff active"
+vector 83 StaticAP.client[0].wlan[0].mac.hcf.edca.edcaf[2].txopProcedure txopActive:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source warmup(count(txopStarted)-count(txopEnded))
+attr title "txop active"
+vector 84 StaticAP.client[0].wlan[0].mac.hcf.edca.edcaf[3].pendingQueue queueLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + count(packetPushStarted) - count(packetPulled) - count(packetRemoved) - count(packetDropped)))"
+attr title "queue length"
+attr unit pk
+vector 85 StaticAP.client[0].wlan[0].mac.hcf.edca.edcaf[3].pendingQueue queueBitLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + sum(packetLength(packetPushStarted)) - sum(packetLength(packetPulled)) - sum(packetLength(packetRemoved)) - sum(packetLength(packetDropped))))"
+attr title "queue bit length"
+attr unit b
+vector 86 StaticAP.client[0].wlan[0].mac.hcf.edca.edcaf[3].inProgressFrames queueLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(count(packetEnqueued) - count(packetDequeued))"
+attr title "queue length"
+vector 87 StaticAP.client[0].wlan[0].mac.hcf.edca.edcaf[3].contention backoffActive:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source warmup(count(backoffStarted)-count(backoffStopped))
+attr title "backoff active"
+vector 88 StaticAP.client[0].wlan[0].mac.hcf.edca.edcaf[3].txopProcedure txopActive:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source warmup(count(txopStarted)-count(txopEnded))
+attr title "txop active"
+vector 89 StaticAP.client[0].udp passedUpPk:vector(count) ETV
+attr interpolationmode none
+attr recordingmode vector(count)
+attr source packetSentToUpper
+attr title "packets passed up, count"
+vector 90 StaticAP.client[0].udp droppedPkWrongPort:vector(count) ETV
+attr interpolationmode none
+attr recordingmode vector(count)
+attr source packetDropReasonIsNoPortFound(packetDropped)
+attr title "packets dropped (wrong port), count"
+vector 91 StaticAP.client[0].udp droppedPkBadChecksum:vector(count) ETV
+attr interpolationmode none
+attr recordingmode vector(count)
+attr source packetDropReasonIsIncorrectlyReceived(packetDropped)
+attr title "packets dropped (checksum error), count"
+vector 92 StaticAP.client[0].app[2] packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source packetSent
+attr title "packets sent, packetBytes"
+vector 93 StaticAP.client[0].udp packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source packetSent
+attr title "packets sent, packetBytes"
+vector 94 StaticAP.client[0].wlan[0].mac packetReceivedFromUpper:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr title "packets received from upper layer, packetBytes"
+vector 95 StaticAP.client[0].wlan[0].mac.hcf.edca.edcaf[1].pendingQueue incomingPacketLengths:vector ETV
+attr interpolationmode none
+attr recordingmode vector
+attr source packetLength(packetPushStarted)
+attr title "incoming packet lengths"
+attr unit b
+vector 96 StaticAP.client[0].wlan[0].mac.hcf.edca.edcaf[1].pendingQueue incomingDataRate:vector ETV
+attr interpolationmode linear
+attr recordingmode vector
+attr source throughput(packetPushStarted)
+attr title "incoming datarate"
+attr unit bps
+vector 97 StaticAP.client[0].wlan[0].mac.hcf.edca.edcaf[1].contention backoffPeriodGenerated:vector ETV
+attr interpolationmode none
+attr recordingmode vector
+attr title "backoff periods"
+vector 98 StaticAP.client[0].wlan[0].mac.hcf.edca.edcaf[1].contention stateChanged:vector ETV
+attr enum IDLE,DEFER,IFS_AND_BACKOFF
+attr interpolationmode none
+attr recordingmode vector
+attr title "contention state changed"
+attr type enum
+vector 99 StaticAP.client[0].wlan[0].mac.hcf.edca.edcaf[1].pendingQueue queueingTime:vector ETV
+attr interpolationmode none
+attr recordingmode vector
+attr source queueingTime(packetPulled)
+attr title "queueing times"
+attr unit s
+vector 100 StaticAP.client[0].wlan[0].mac.hcf.edca.edcaf[1].pendingQueue outgoingPacketLengths:vector ETV
+attr interpolationmode none
+attr recordingmode vector
+attr source packetLength(packetPulled)
+attr title "outgoing packet lengths"
+attr unit b
+vector 101 StaticAP.client[0].wlan[0].mac.hcf.edca.edcaf[1].pendingQueue outgoingDataRate:vector ETV
+attr interpolationmode linear
+attr recordingmode vector
+attr source throughput(packetPulled)
+attr title "outgoing datarate"
+attr unit bps
+vector 102 StaticAP.client[0].wlan[0].mac.hcf datarateSelected:vector ETV
+attr interpolationmode none
+attr recordingmode vector
+attr title "datarates selected"
+vector 103 StaticAP.client[0].wlan[0].mac packetSentToLower:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr title "packets sent to lower layer, packetBytes"
+vector 104 StaticAP.client[0].wlan[0].radio radioMode:vector ETV
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source radioModeChanged
+attr title "Radio mode"
+vector 105 StaticAP.client[0].wlan[0].radio receptionState:vector ETV
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source receptionStateChanged
+attr title "Radio reception state"
+vector 106 StaticAP.client[0].wlan[0].mac.dcf.channelAccess.contention stateChanged:vector ETV
+attr enum IDLE,DEFER,IFS_AND_BACKOFF
+attr interpolationmode none
+attr recordingmode vector
+attr title "contention state changed"
+attr type enum
+vector 107 StaticAP.client[0].wlan[0].mac.hcf.edca.edcaf[0].contention stateChanged:vector ETV
+attr enum IDLE,DEFER,IFS_AND_BACKOFF
+attr interpolationmode none
+attr recordingmode vector
+attr title "contention state changed"
+attr type enum
+vector 108 StaticAP.client[0].wlan[0].mac.hcf.edca.edcaf[2].contention stateChanged:vector ETV
+attr enum IDLE,DEFER,IFS_AND_BACKOFF
+attr interpolationmode none
+attr recordingmode vector
+attr title "contention state changed"
+attr type enum
+vector 109 StaticAP.client[0].wlan[0].mac.hcf.edca.edcaf[3].contention stateChanged:vector ETV
+attr enum IDLE,DEFER,IFS_AND_BACKOFF
+attr interpolationmode none
+attr recordingmode vector
+attr title "contention state changed"
+attr type enum
+vector 110 StaticAP.client[0].wlan[0].radio transmissionState:vector ETV
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source transmissionStateChanged
+attr title "Radio transmission state"
+vector 111 StaticAP.accessPoint.wlan[0].radio receptionState:vector ETV
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source receptionStateChanged
+attr title "Radio reception state"
+vector 112 StaticAP.accessPoint.wlan[0].mac.dcf.channelAccess.contention stateChanged:vector ETV
+attr enum IDLE,DEFER,IFS_AND_BACKOFF
+attr interpolationmode none
+attr recordingmode vector
+attr title "contention state changed"
+attr type enum
+vector 113 StaticAP.accessPoint.wlan[0].mac.hcf.edca.edcaf[0].contention stateChanged:vector ETV
+attr enum IDLE,DEFER,IFS_AND_BACKOFF
+attr interpolationmode none
+attr recordingmode vector
+attr title "contention state changed"
+attr type enum
+vector 114 StaticAP.accessPoint.wlan[0].mac.hcf.edca.edcaf[1].contention stateChanged:vector ETV
+attr enum IDLE,DEFER,IFS_AND_BACKOFF
+attr interpolationmode none
+attr recordingmode vector
+attr title "contention state changed"
+attr type enum
+vector 115 StaticAP.accessPoint.wlan[0].mac.hcf.edca.edcaf[2].contention stateChanged:vector ETV
+attr enum IDLE,DEFER,IFS_AND_BACKOFF
+attr interpolationmode none
+attr recordingmode vector
+attr title "contention state changed"
+attr type enum
+vector 116 StaticAP.accessPoint.wlan[0].mac.hcf.edca.edcaf[3].contention stateChanged:vector ETV
+attr enum IDLE,DEFER,IFS_AND_BACKOFF
+attr interpolationmode none
+attr recordingmode vector
+attr title "contention state changed"
+attr type enum
+vector 117 StaticAP.client[0].wlan[0].mac.hcf.edca.edcaf[1] packetSentToPeer:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr title "packets sent, packetBytes"
+vector 118 StaticAP.client[0].wlan[0].mac.hcf.edca.edcaf[1] packetSentToPeerUnicast:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source ieee80211Unicast(packetSentToPeer)
+attr title "packets sent: unicast, packetBytes"
+vector 119 StaticAP.client[0].wlan[0].mac.hcf.edca.edcaf[1] packetSentToPeerWithoutRetry:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source ieee80211NotRetry(packetSentToPeer)
+attr title "packets sent: without retry, packetBytes"
+vector 120 StaticAP.client[0].wlan[0].mac.hcf packetSentToPeer:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr title "packets sent, packetBytes"
+vector 121 StaticAP.client[0].wlan[0].mac.hcf packetSentToPeerUnicast:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source ieee80211Unicast(packetSentToPeer)
+attr title "packets sent: unicast, packetBytes"
+vector 122 StaticAP.client[0].wlan[0].mac.hcf packetSentToPeerWithoutRetry:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source ieee80211NotRetry(packetSentToPeer)
+attr title "packets sent: without retry, packetBytes"
+vector 123 StaticAP.client[0].wlan[0].mac.rx nav:vector ETV
+attr interpolationmode linear
+attr recordingmode vector
+attr source navChanged
+attr title "network allocation vector"
+vector 124 StaticAP.accessPoint.wlan[0].mac packetReceivedFromLower:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr title "packets received from lower layer, packetBytes"
+vector 125 StaticAP.accessPoint.wlan[0].mac.hcf packetReceivedFromPeerUnicast:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source ieee80211Unicast(packetReceivedFromPeer)
+attr title "packets received: unicast, packetBytes"
+vector 126 StaticAP.accessPoint.wlan[0].mac.hcf packetReceivedFromPeerWithoutRetry:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source ieee80211NotRetry(packetReceivedFromPeer)
+attr title "packets received: without retry, packetBytes"
+vector 127 StaticAP.accessPoint.wlan[0].mac.hcf datarateSelected:vector ETV
+attr interpolationmode none
+attr recordingmode vector
+attr title "datarates selected"
+vector 128 StaticAP.accessPoint.wlan[0].mac packetSentToUpper:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr title "packets sent to upper layer, packetBytes"
+vector 129 StaticAP.accessPoint.ethernet decapPk:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source decapPk
+attr title "packets decapsulated, packetBytes"
+vector 130 StaticAP.accessPoint.ethernet encapPk:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source encapPk
+attr title "packets encapsulated, packetBytes"
+vector 131 StaticAP.accessPoint.eth[0].queue incomingPacketLengths:vector ETV
+attr interpolationmode none
+attr recordingmode vector
+attr source packetLength(packetPushStarted)
+attr title "incoming packet lengths"
+attr unit b
+vector 132 StaticAP.accessPoint.eth[0].queue incomingDataRate:vector ETV
+attr interpolationmode linear
+attr recordingmode vector
+attr source throughput(packetPushStarted)
+attr title "incoming datarate"
+attr unit bps
+vector 133 StaticAP.accessPoint.eth[0].queue queueingTime:vector ETV
+attr interpolationmode none
+attr recordingmode vector
+attr source queueingTime(packetPulled)
+attr title "queueing times"
+attr unit s
+vector 134 StaticAP.accessPoint.eth[0].queue outgoingPacketLengths:vector ETV
+attr interpolationmode none
+attr recordingmode vector
+attr source packetLength(packetPulled)
+attr title "outgoing packet lengths"
+attr unit b
+vector 135 StaticAP.accessPoint.eth[0].queue outgoingDataRate:vector ETV
+attr interpolationmode linear
+attr recordingmode vector
+attr source throughput(packetPulled)
+attr title "outgoing datarate"
+attr unit bps
+vector 136 StaticAP.accessPoint.eth[0].mac packetReceivedFromUpper:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source packetReceivedFromUpper
+attr title "packet bytes from higher layer, packetBytes"
+vector 137 StaticAP.accessPoint.eth[0].mac txPk:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source packetSentToLower
+attr title "packets transmitted, packetBytes"
+vector 138 StaticAP.wifiRouter.eth[1].mac rxPkOk:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source rxPkOk
+attr title "packets received OK, packetBytes"
+vector 139 StaticAP.wifiRouter.eth[1].mac passedUpPk:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source packetSentToUpper
+attr title "packets passed to higher layer, packetBytes"
+vector 140 StaticAP.wifiRouter.ethernet decapPk:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source decapPk
+attr title "packets decapsulated, packetBytes"
+vector 141 StaticAP.wifiRouter.ethernet encapPk:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source encapPk
+attr title "packets encapsulated, packetBytes"
+vector 142 StaticAP.wifiRouter.eth[0].queue.classifier pkClass:vector ETV
+attr interpolationmode none
+attr recordingmode vector
+attr source pkClass
+attr title "packet class"
+vector 143 StaticAP.wifiRouter.eth[0].queue.beQueue incomingPacketLengths:vector ETV
+attr interpolationmode none
+attr recordingmode vector
+attr source packetLength(packetPushStarted)
+attr title "incoming packet lengths"
+attr unit b
+vector 144 StaticAP.wifiRouter.eth[0].queue.beQueue incomingDataRate:vector ETV
+attr interpolationmode linear
+attr recordingmode vector
+attr source throughput(packetPushStarted)
+attr title "incoming datarate"
+attr unit bps
+vector 145 StaticAP.wifiRouter.eth[0].queue incomingPacketLengths:vector ETV
+attr interpolationmode none
+attr recordingmode vector
+attr source packetLength(localSignal(packetPushStarted))
+attr title "incoming packet lengths"
+attr unit b
+vector 146 StaticAP.wifiRouter.eth[0].queue incomingDataRate:vector ETV
+attr interpolationmode linear
+attr recordingmode vector
+attr source throughput(localSignal(packetPushStarted))
+attr title "incoming datarate"
+attr unit bps
+vector 147 StaticAP.wifiRouter.eth[0].queue.beQueue queueingTime:vector ETV
+attr interpolationmode none
+attr recordingmode vector
+attr source queueingTime(packetPulled)
+attr title "queueing times"
+attr unit s
+vector 148 StaticAP.wifiRouter.eth[0].queue.beQueue outgoingPacketLengths:vector ETV
+attr interpolationmode none
+attr recordingmode vector
+attr source packetLength(packetPulled)
+attr title "outgoing packet lengths"
+attr unit b
+vector 149 StaticAP.wifiRouter.eth[0].queue.beQueue outgoingDataRate:vector ETV
+attr interpolationmode linear
+attr recordingmode vector
+attr source throughput(packetPulled)
+attr title "outgoing datarate"
+attr unit bps
+vector 150 StaticAP.wifiRouter.eth[0].queue queueingTime:vector ETV
+attr interpolationmode none
+attr recordingmode vector
+attr source queueingTime(localSignal(packetPulled))
+attr title "queueing times"
+attr unit s
+vector 151 StaticAP.wifiRouter.eth[0].queue outgoingPacketLengths:vector ETV
+attr interpolationmode none
+attr recordingmode vector
+attr source packetLength(localSignal(packetPulled))
+attr title "outgoing packet lengths"
+attr unit b
+vector 152 StaticAP.wifiRouter.eth[0].queue outgoingDataRate:vector ETV
+attr interpolationmode linear
+attr recordingmode vector
+attr source throughput(localSignal(packetPulled))
+attr title "outgoing datarate"
+attr unit bps
+vector 153 StaticAP.wifiRouter.eth[0].queue.wrr packetLengths:vector ETV
+attr interpolationmode none
+attr recordingmode vector
+attr source packetLength(packetPulled)
+attr title "packet lengths"
+attr unit b
+vector 154 StaticAP.wifiRouter.eth[0].queue.wrr dataRate:vector ETV
+attr interpolationmode linear
+attr recordingmode vector
+attr source throughput(packetPulled)
+attr title "data rate"
+attr unit bps
+vector 155 StaticAP.wifiRouter.eth[0].queue.priority packetLengths:vector ETV
+attr interpolationmode none
+attr recordingmode vector
+attr source packetLength(packetPulled)
+attr title "packet lengths"
+attr unit b
+vector 156 StaticAP.wifiRouter.eth[0].queue.priority dataRate:vector ETV
+attr interpolationmode linear
+attr recordingmode vector
+attr source throughput(packetPulled)
+attr title "data rate"
+attr unit bps
+vector 157 StaticAP.wifiRouter.eth[0].mac packetReceivedFromUpper:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source packetReceivedFromUpper
+attr title "packet bytes from higher layer, packetBytes"
+vector 158 StaticAP.wifiRouter.eth[0].mac txPk:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source packetSentToLower
+attr title "packets transmitted, packetBytes"
+vector 159 StaticAP.server.eth[0].mac rxPkOk:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source rxPkOk
+attr title "packets received OK, packetBytes"
+vector 160 StaticAP.server.eth[0].mac passedUpPk:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source packetSentToUpper
+attr title "packets passed to higher layer, packetBytes"
+vector 161 StaticAP.server.ethernet decapPk:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source decapPk
+attr title "packets decapsulated, packetBytes"
+vector 162 StaticAP.server.udp packetReceived:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source packetReceived
+attr title "packets received, packetBytes"
+vector 163 StaticAP.server.app[2] packetReceived:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source packetReceived
+attr title "packets received, packetBytes"
+vector 164 StaticAP.server.app[2] throughput:vector ETV
+attr recordingmode vector
+attr source throughput(packetReceived)
+attr title throughput
+attr unit bps
+vector 165 StaticAP.server.app[2] endToEndDelay:vector ETV
+attr interpolationmode none
+attr recordingmode vector
+attr source dataAge(packetReceived)
+attr title "end-to-end delay"
+attr unit s
+vector 166 StaticAP.server.app[2] rcvdPkSeqNo:vector ETV
+attr interpolationmode none
+attr recordingmode vector
+attr source appPkSeqNo(packetReceived)
+attr title "received packet sequence number"
+vector 167 StaticAP.accessPoint.wlan[0].mac packetSentToLower:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr title "packets sent to lower layer, packetBytes"
+vector 168 StaticAP.accessPoint.wlan[0].radio radioMode:vector ETV
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source radioModeChanged
+attr title "Radio mode"
+vector 169 StaticAP.accessPoint.wlan[0].radio transmissionState:vector ETV
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source transmissionStateChanged
+attr title "Radio transmission state"
+vector 170 StaticAP.accessPoint.wlan[0].mac.hcf packetSentToPeer:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr title "packets sent, packetBytes"
+vector 171 StaticAP.accessPoint.wlan[0].mac.hcf packetSentToPeerUnicast:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source ieee80211Unicast(packetSentToPeer)
+attr title "packets sent: unicast, packetBytes"
+vector 172 StaticAP.accessPoint.wlan[0].mac.hcf packetSentToPeerWithoutRetry:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source ieee80211NotRetry(packetSentToPeer)
+attr title "packets sent: without retry, packetBytes"
+vector 173 StaticAP.client[0].wlan[0].mac packetReceivedFromLower:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr title "packets received from lower layer, packetBytes"
+vector 174 StaticAP.client[0].wlan[0].mac.hcf packetReceivedFromPeerUnicast:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source ieee80211Unicast(packetReceivedFromPeer)
+attr title "packets received: unicast, packetBytes"
+vector 175 StaticAP.client[0].wlan[0].mac.hcf packetReceivedFromPeerWithoutRetry:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source ieee80211NotRetry(packetReceivedFromPeer)
+attr title "packets received: without retry, packetBytes"
+vector 176 StaticAP.client[0].wlan[0].mac.hcf.edca.edcaf[1].inProgressFrames queueingTime:vector ETV
+attr interpolationmode none
+attr recordingmode vector
+attr source queueingTime(packetDequeued)
+attr title "queueing times"
+vector 177 StaticAP.server.app[1] voIPGeneratedThroughput:vector ETV
+attr recordingmode vector
+attr source voIPGeneratedThroughput
+attr title "Throughput generated by the application"
+attr unit Bps
+vector 178 StaticAP.server.udp packetSent:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source packetSent
+attr title "packets sent, packetBytes"
+vector 179 StaticAP.server.ethernet encapPk:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source encapPk
+attr title "packets encapsulated, packetBytes"
+vector 180 StaticAP.server.eth[0].queue incomingPacketLengths:vector ETV
+attr interpolationmode none
+attr recordingmode vector
+attr source packetLength(packetPushStarted)
+attr title "incoming packet lengths"
+attr unit b
+vector 181 StaticAP.server.eth[0].queue incomingDataRate:vector ETV
+attr interpolationmode linear
+attr recordingmode vector
+attr source throughput(packetPushStarted)
+attr title "incoming datarate"
+attr unit bps
+vector 182 StaticAP.server.eth[0].queue queueingTime:vector ETV
+attr interpolationmode none
+attr recordingmode vector
+attr source queueingTime(packetPulled)
+attr title "queueing times"
+attr unit s
+vector 183 StaticAP.server.eth[0].queue outgoingPacketLengths:vector ETV
+attr interpolationmode none
+attr recordingmode vector
+attr source packetLength(packetPulled)
+attr title "outgoing packet lengths"
+attr unit b
+vector 184 StaticAP.server.eth[0].queue outgoingDataRate:vector ETV
+attr interpolationmode linear
+attr recordingmode vector
+attr source throughput(packetPulled)
+attr title "outgoing datarate"
+attr unit bps
+vector 185 StaticAP.server.eth[0].mac packetReceivedFromUpper:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source packetReceivedFromUpper
+attr title "packet bytes from higher layer, packetBytes"
+vector 186 StaticAP.server.eth[0].mac txPk:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source packetSentToLower
+attr title "packets transmitted, packetBytes"
+vector 187 StaticAP.wifiRouter.eth[0].mac rxPkOk:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source rxPkOk
+attr title "packets received OK, packetBytes"
+vector 188 StaticAP.wifiRouter.eth[0].mac passedUpPk:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source packetSentToUpper
+attr title "packets passed to higher layer, packetBytes"
+vector 189 StaticAP.wifiRouter.eth[1].queue.classifier pkClass:vector ETV
+attr interpolationmode none
+attr recordingmode vector
+attr source pkClass
+attr title "packet class"
+vector 190 StaticAP.wifiRouter.eth[1].queue.beQueue incomingPacketLengths:vector ETV
+attr interpolationmode none
+attr recordingmode vector
+attr source packetLength(packetPushStarted)
+attr title "incoming packet lengths"
+attr unit b
+vector 191 StaticAP.wifiRouter.eth[1].queue.beQueue incomingDataRate:vector ETV
+attr interpolationmode linear
+attr recordingmode vector
+attr source throughput(packetPushStarted)
+attr title "incoming datarate"
+attr unit bps
+vector 192 StaticAP.wifiRouter.eth[1].queue incomingPacketLengths:vector ETV
+attr interpolationmode none
+attr recordingmode vector
+attr source packetLength(localSignal(packetPushStarted))
+attr title "incoming packet lengths"
+attr unit b
+vector 193 StaticAP.wifiRouter.eth[1].queue incomingDataRate:vector ETV
+attr interpolationmode linear
+attr recordingmode vector
+attr source throughput(localSignal(packetPushStarted))
+attr title "incoming datarate"
+attr unit bps
+vector 194 StaticAP.wifiRouter.eth[1].queue.beQueue queueingTime:vector ETV
+attr interpolationmode none
+attr recordingmode vector
+attr source queueingTime(packetPulled)
+attr title "queueing times"
+attr unit s
+vector 195 StaticAP.wifiRouter.eth[1].queue.beQueue outgoingPacketLengths:vector ETV
+attr interpolationmode none
+attr recordingmode vector
+attr source packetLength(packetPulled)
+attr title "outgoing packet lengths"
+attr unit b
+vector 196 StaticAP.wifiRouter.eth[1].queue.beQueue outgoingDataRate:vector ETV
+attr interpolationmode linear
+attr recordingmode vector
+attr source throughput(packetPulled)
+attr title "outgoing datarate"
+attr unit bps
+vector 197 StaticAP.wifiRouter.eth[1].queue queueingTime:vector ETV
+attr interpolationmode none
+attr recordingmode vector
+attr source queueingTime(localSignal(packetPulled))
+attr title "queueing times"
+attr unit s
+vector 198 StaticAP.wifiRouter.eth[1].queue outgoingPacketLengths:vector ETV
+attr interpolationmode none
+attr recordingmode vector
+attr source packetLength(localSignal(packetPulled))
+attr title "outgoing packet lengths"
+attr unit b
+vector 199 StaticAP.wifiRouter.eth[1].queue outgoingDataRate:vector ETV
+attr interpolationmode linear
+attr recordingmode vector
+attr source throughput(localSignal(packetPulled))
+attr title "outgoing datarate"
+attr unit bps
+vector 200 StaticAP.wifiRouter.eth[1].queue.wrr packetLengths:vector ETV
+attr interpolationmode none
+attr recordingmode vector
+attr source packetLength(packetPulled)
+attr title "packet lengths"
+attr unit b
+vector 201 StaticAP.wifiRouter.eth[1].queue.wrr dataRate:vector ETV
+attr interpolationmode linear
+attr recordingmode vector
+attr source throughput(packetPulled)
+attr title "data rate"
+attr unit bps
+vector 202 StaticAP.wifiRouter.eth[1].queue.priority packetLengths:vector ETV
+attr interpolationmode none
+attr recordingmode vector
+attr source packetLength(packetPulled)
+attr title "packet lengths"
+attr unit b
+vector 203 StaticAP.wifiRouter.eth[1].queue.priority dataRate:vector ETV
+attr interpolationmode linear
+attr recordingmode vector
+attr source throughput(packetPulled)
+attr title "data rate"
+attr unit bps
+vector 204 StaticAP.wifiRouter.eth[1].mac packetReceivedFromUpper:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source packetReceivedFromUpper
+attr title "packet bytes from higher layer, packetBytes"
+vector 205 StaticAP.wifiRouter.eth[1].mac txPk:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source packetSentToLower
+attr title "packets transmitted, packetBytes"
+vector 206 StaticAP.accessPoint.eth[0].mac rxPkOk:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source rxPkOk
+attr title "packets received OK, packetBytes"
+vector 207 StaticAP.accessPoint.eth[0].mac passedUpPk:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source packetSentToUpper
+attr title "packets passed to higher layer, packetBytes"
+vector 208 StaticAP.accessPoint.wlan[0].mac packetReceivedFromUpper:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr title "packets received from upper layer, packetBytes"
+vector 209 StaticAP.accessPoint.wlan[0].mac.hcf.edca.edcaf[1].pendingQueue incomingPacketLengths:vector ETV
+attr interpolationmode none
+attr recordingmode vector
+attr source packetLength(packetPushStarted)
+attr title "incoming packet lengths"
+attr unit b
+vector 210 StaticAP.accessPoint.wlan[0].mac.hcf.edca.edcaf[1].pendingQueue incomingDataRate:vector ETV
+attr interpolationmode linear
+attr recordingmode vector
+attr source throughput(packetPushStarted)
+attr title "incoming datarate"
+attr unit bps
+vector 211 StaticAP.accessPoint.wlan[0].mac.hcf.edca.edcaf[1].contention backoffPeriodGenerated:vector ETV
+attr interpolationmode none
+attr recordingmode vector
+attr title "backoff periods"
+vector 212 StaticAP.accessPoint.wlan[0].mac.hcf.edca.edcaf[1].pendingQueue queueingTime:vector ETV
+attr interpolationmode none
+attr recordingmode vector
+attr source queueingTime(packetPulled)
+attr title "queueing times"
+attr unit s
+vector 213 StaticAP.accessPoint.wlan[0].mac.hcf.edca.edcaf[1].pendingQueue outgoingPacketLengths:vector ETV
+attr interpolationmode none
+attr recordingmode vector
+attr source packetLength(packetPulled)
+attr title "outgoing packet lengths"
+attr unit b
+vector 214 StaticAP.accessPoint.wlan[0].mac.hcf.edca.edcaf[1].pendingQueue outgoingDataRate:vector ETV
+attr interpolationmode linear
+attr recordingmode vector
+attr source throughput(packetPulled)
+attr title "outgoing datarate"
+attr unit bps
+vector 215 StaticAP.accessPoint.wlan[0].mac.hcf.edca.edcaf[1] packetSentToPeer:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr title "packets sent, packetBytes"
+vector 216 StaticAP.accessPoint.wlan[0].mac.hcf.edca.edcaf[1] packetSentToPeerUnicast:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source ieee80211Unicast(packetSentToPeer)
+attr title "packets sent: unicast, packetBytes"
+vector 217 StaticAP.accessPoint.wlan[0].mac.hcf.edca.edcaf[1] packetSentToPeerWithoutRetry:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source ieee80211NotRetry(packetSentToPeer)
+attr title "packets sent: without retry, packetBytes"
+vector 218 StaticAP.accessPoint.wlan[0].mac.rx nav:vector ETV
+attr interpolationmode linear
+attr recordingmode vector
+attr source navChanged
+attr title "network allocation vector"
+vector 219 StaticAP.client[0].wlan[0].mac packetSentToUpper:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr title "packets sent to upper layer, packetBytes"
+vector 220 StaticAP.client[0].udp packetReceived:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source packetReceived
+attr title "packets received, packetBytes"
+vector 221 StaticAP.client[0].app[0] voIPFrameDelay:vector ETV
+attr recordingmode vector
+attr source voIPFrameDelay
+attr title "VoIP Frame Delay"
+attr unit s
+vector 222 StaticAP.client[0].app[0] voIPReceivedThroughput:vector ETV
+attr recordingmode vector
+attr source voIPReceivedThroughput
+attr title "Throughput received at the application level"
+attr unit Bps
+vector 223 StaticAP.accessPoint.wlan[0].mac.hcf.edca.edcaf[1].inProgressFrames queueingTime:vector ETV
+attr interpolationmode none
+attr recordingmode vector
+attr source queueingTime(packetDequeued)
+attr title "queueing times"
+vector 224 StaticAP.accessPoint.wlan[0].mac.hcf.edca.edcaf[3].pendingQueue incomingPacketLengths:vector ETV
+attr interpolationmode none
+attr recordingmode vector
+attr source packetLength(packetPushStarted)
+attr title "incoming packet lengths"
+attr unit b
+vector 225 StaticAP.accessPoint.wlan[0].mac.hcf.edca.edcaf[3].pendingQueue incomingDataRate:vector ETV
+attr interpolationmode linear
+attr recordingmode vector
+attr source throughput(packetPushStarted)
+attr title "incoming datarate"
+attr unit bps
+vector 226 StaticAP.accessPoint.wlan[0].mac.hcf.edca.edcaf[3].contention backoffPeriodGenerated:vector ETV
+attr interpolationmode none
+attr recordingmode vector
+attr title "backoff periods"
+vector 227 StaticAP.accessPoint.wlan[0].mac.hcf.edca.edcaf[3].pendingQueue queueingTime:vector ETV
+attr interpolationmode none
+attr recordingmode vector
+attr source queueingTime(packetPulled)
+attr title "queueing times"
+attr unit s
+vector 228 StaticAP.accessPoint.wlan[0].mac.hcf.edca.edcaf[3].pendingQueue outgoingPacketLengths:vector ETV
+attr interpolationmode none
+attr recordingmode vector
+attr source packetLength(packetPulled)
+attr title "outgoing packet lengths"
+attr unit b
+vector 229 StaticAP.accessPoint.wlan[0].mac.hcf.edca.edcaf[3].pendingQueue outgoingDataRate:vector ETV
+attr interpolationmode linear
+attr recordingmode vector
+attr source throughput(packetPulled)
+attr title "outgoing datarate"
+attr unit bps
+vector 230 StaticAP.accessPoint.wlan[0].mac.hcf.edca.edcaf[3] packetSentToPeer:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr title "packets sent, packetBytes"
+vector 231 StaticAP.accessPoint.wlan[0].mac.hcf.edca.edcaf[3] packetSentToPeerMulticast:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source ieee80211Multicast(packetSentToPeer)
+attr title "packets sent: multicast, packetBytes"
+vector 232 StaticAP.accessPoint.wlan[0].mac.hcf.edca.edcaf[3] packetSentToPeerBroadcast:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source ieee80211Broadcast(packetSentToPeer)
+attr title "packets sent: broadcast , packetBytes"
+vector 233 StaticAP.accessPoint.wlan[0].mac.hcf.edca.edcaf[3] packetSentToPeerWithoutRetry:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source ieee80211NotRetry(packetSentToPeer)
+attr title "packets sent: without retry, packetBytes"
+vector 234 StaticAP.accessPoint.wlan[0].mac.hcf packetSentToPeerMulticast:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source ieee80211Multicast(packetSentToPeer)
+attr title "packets sent: multicast, packetBytes"
+vector 235 StaticAP.accessPoint.wlan[0].mac.hcf packetSentToPeerBroadcast:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source ieee80211Broadcast(packetSentToPeer)
+attr title "packets sent: broadcast , packetBytes"
+vector 236 StaticAP.accessPoint.wlan[0].mac.hcf.edca.edcaf[3].inProgressFrames queueingTime:vector ETV
+attr interpolationmode none
+attr recordingmode vector
+attr source queueingTime(packetDequeued)
+attr title "queueing times"
+vector 237 StaticAP.client[0].wlan[0].mac.hcf packetReceivedFromPeerMulticast:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source ieee80211Multicast(packetReceivedFromPeer)
+attr title "packets received: multicast, packetBytes"
+vector 238 StaticAP.client[0].wlan[0].mac.hcf packetReceivedFromPeerBroadcast:vector(packetBytes) ETV
+attr interpolationmode none
+attr recordingmode vector(packetBytes)
+attr source ieee80211Broadcast(packetReceivedFromPeer)
+attr title "packets received: broadcast, packetBytes"
+vector 239 StaticAP.client[0].app[1] voIPGeneratedThroughput:vector ETV
+attr recordingmode vector
+attr source voIPGeneratedThroughput
+attr title "Throughput generated by the application"
+attr unit Bps
+vector 240 StaticAP.server.app[0] voIPFrameDelay:vector ETV
+attr recordingmode vector
+attr source voIPFrameDelay
+attr title "VoIP Frame Delay"
+attr unit s
+vector 241 StaticAP.server.app[0] voIPReceivedThroughput:vector ETV
+attr recordingmode vector
+attr source voIPReceivedThroughput
+attr title "Throughput received at the application level"
+attr unit Bps
+0	72832 14231 0 136019 1.5 19.020779997213 529 0 0 0 0
+1	87063 14231 0 136019 1.5 19.020779997213 529 0 0 0 0
+2	101294 71101 0 142140 1.5 19.995117869746 2423 0 2422 2934253 4738818595
+3	172395 11 0 0 1.5 1.5 1 0 0 0 0
+4	172406 11 0 0 1.5 1.5 1 0 0 0 0
+5	172417 73845 0 142134 1.5 19.995116957346 2427 -2592 0 -3345993 5806460415
+6	246262 83087 0 142134 1.5 19.995116957346 2427 -18625536 0 -23713131760 2.9550477465092e+17
+7	329349 55 0 0 1.5 1.5 5 0 0 0 0
+8	329404 55 0 0 1.5 1.5 5 0 0 0 0
+9	329459 55 0 0 1.5 1.5 5 0 0 0 0
+10	329514 60 0 0 1.5 1.5 5 0 0 0 0
+11	329574 60 0 0 1.5 1.5 5 0 0 0 0
+12	329634 60 0 0 1.5 1.5 5 0 0 0 0
+13	329694 60 0 0 1.5 1.5 5 0 0 0 0
+14	329754 60 0 0 1.5 1.5 5 0 0 0 0
+15	329814 60 0 0 1.5 1.5 5 0 0 0 0
+16	329874 60 0 0 1.5 1.5 5 0 0 0 0
+17	329934 67413 0 142134 1.5 19.995116957346 2427 0 0 0 0
+18	397347 67413 0 142134 1.5 19.995116957346 2427 0 0 0 0
+19	464760 16266 0 136026 1.5 19.020780346413 529 -557 0 -154842 57745586
+20	481026 18116 0 136026 1.5 19.020780346413 529 -1625776 0 -450694496 4.9043468598118e+14
+21	499142 60 0 0 1.5 1.5 5 0 0 0 0
+22	499202 60 0 0 1.5 1.5 5 0 0 0 0
+23	499262 60 0 0 1.5 1.5 5 0 0 0 0
+24	499322 60 0 0 1.5 1.5 5 0 0 0 0
+25	499382 60 0 0 1.5 1.5 5 0 0 0 0
+26	499442 60 0 0 1.5 1.5 5 0 0 0 0
+27	499502 60 0 0 1.5 1.5 5 0 0 0 0
+28	499562 60 0 0 1.5 1.5 5 0 0 0 0
+29	499622 60 0 0 1.5 1.5 5 0 0 0 0
+30	499682 60 0 0 1.5 1.5 5 0 0 0 0
+31	499742 14760 0 136026 1.5 19.020780346413 529 0 0 0 0
+32	514502 14760 0 136026 1.5 19.020780346413 529 0 0 0 0
+33	529262 24 0 0 1.5 1.5 2 0 0 0 0
+34	529286 60 0 0 1.5 1.5 5 0 0 0 0
+35	529346 60 0 0 1.5 1.5 5 0 0 0 0
+36	529406 24 0 0 1.5 1.5 2 0 0 0 0
+37	529430 24 0 0 1.5 1.5 2 0 0 0 0
+38	529454 39364 0 141882 1.5 19.96240236964 1420 0 1 709 709
+39	568818 24 0 0 1.5 1.5 2 0 0 0 0
+40	568842 60 0 0 1.5 1.5 5 0 0 0 0
+41	568902 60 0 0 1.5 1.5 5 0 0 0 0
+42	568962 24 0 0 1.5 1.5 2 0 0 0 0
+43	568986 24 0 0 1.5 1.5 2 0 0 0 0
+44	569010 24 0 0 1.5 1.5 2 0 0 0 0
+45	569034 29460 0 136036 1.5 19.020780695613 1053 0 1 524 524
+46	598494 31032 0 136036 1.5 19.020780695613 1053 0 3072 1609728 4945084416
+47	629526 29424 0 136056 1.5 19.020984438053 1050 0 1 524 524
+48	658950 29424 0 136035 1.5 19.020780695613 1050 0 1 524 524
+49	688374 29424 0 136056 1.5 19.020984438053 1050 0 1 524 524
+50	717798 60 0 0 1.5 1.5 5 0 0 0 0
+51	717858 60 0 0 1.5 1.5 5 0 0 0 0
+52	717918 24 0 0 1.5 1.5 2 0 0 0 0
+53	717942 24 0 0 1.5 1.5 2 0 0 0 0
+54	717966 24 0 0 1.5 1.5 2 0 0 0 0
+55	717990 9993 0 141878 1.5 19.96235636964 375 0 1 185 185
+56	727983 10363 0 141878 1.5 19.96235636964 375 0 384 71040 27279360
+57	738346 9964 0 141882 1.5 19.96240236964 372 0 1 185 185
+58	748310 9957 0 141877 1.5 19.96235636964 372 0 1 185 185
+59	758267 9964 0 141882 1.5 19.96240236964 372 0 1 185 185
+60	768231 67413 0 142127 1.5 19.995116044946 2427 0 0 0 0
+61	835644 67413 0 142127 1.5 19.995116044946 2427 0 0 0 0
+62	903057 24 0 0 1.5 1.5 2 0 0 0 0
+63	903081 60 0 0 1.5 1.5 5 0 0 0 0
+64	903141 60 0 0 1.5 1.5 5 0 0 0 0
+65	903201 24 0 0 1.5 1.5 2 0 0 0 0
+66	903225 24 0 0 1.5 1.5 2 0 0 0 0
+67	903249 134728 0 142151 1.5 19.995160916166 4846 0 1 2422 2422
+68	1037977 24 0 0 1.5 1.5 2 0 0 0 0
+69	1038001 60 0 0 1.5 1.5 5 0 0 0 0
+70	1038061 60 0 0 1.5 1.5 5 0 0 0 0
+71	1038121 24 0 0 1.5 1.5 2 0 0 0 0
+72	1038145 24 0 0 1.5 1.5 2 0 0 0 0
+73	1038169 24 0 0 1.5 1.5 2 0 0 0 0
+74	1038193 134762 0 142114 1.5 19.994725173726 4849 0 1 2422 2422
+75	1172955 142028 0 142114 1.5 19.994725173726 4849 0 8704 17859584 145553358848
+76	1314983 134728 0 142151 1.5 19.995160916166 4846 0 1 2422 2422
+77	1449711 134726 0 142113 1.5 19.994725173726 4846 0 1 2422 2422
+78	1584437 134728 0 142151 1.5 19.995160916166 4846 0 1 2422 2422
+79	1719165 60 0 0 1.5 1.5 5 0 0 0 0
+80	1719225 60 0 0 1.5 1.5 5 0 0 0 0
+81	1719285 24 0 0 1.5 1.5 2 0 0 0 0
+82	1719309 24 0 0 1.5 1.5 2 0 0 0 0
+83	1719333 24 0 0 1.5 1.5 2 0 0 0 0
+84	1719357 60 0 0 1.5 1.5 5 0 0 0 0
+85	1719417 60 0 0 1.5 1.5 5 0 0 0 0
+86	1719477 24 0 0 1.5 1.5 2 0 0 0 0
+87	1719501 24 0 0 1.5 1.5 2 0 0 0 0
+88	1719525 24 0 0 1.5 1.5 2 0 0 0 0
+89	1719549 15652 0 136046 1.5 19.020939566833 525 0 524 137550 48096650
+90	1735201 12 0 0 1.5 1.5 1 0 0 0 0
+91	1735213 12 0 0 1.5 1.5 1 0 0 0 0
+92	1735225 57018 9726 142108 1.504725173726 19.994725173726 1850 1024 1024 1894400 1939865600
+93	1792243 74045 9727 142109 1.504725173726 19.994725173726 2422 328 1032 2096816 2031832448
+94	1866288 74045 9730 142112 1.504725173726 19.994725173726 2422 356 1060 2164632 2151152992
+95	1940333 74617 9730 142112 1.504725173726 19.994725173726 2422 3072 8704 17859584 145553358848
+96	2014950 4310 9730 141483 0.1 19.9 199 0 1024000 177571840 1.723249721344e+14
+97	2019260 68988 9730 142112 1.504725173726 19.994725173726 2422 0 31 37165 779799
+98	2088248 696172 9730 142150 1.504725173726 19.995160916166 25048 0 2 9688 19376
+99	2784420 68002 9732 142114 1.504725173726 19.994725173726 2422 0 0.000345287441 0.010845172984 2.4545392288226e-06
+100	2852422 77039 9732 142114 1.504725173726 19.994725173726 2422 3072 8704 17859584 145553358848
+101	2929461 4509 9732 141485 0.1 19.9 199 0 1024000 177571840 1.723249721344e+14
+102	2933970 105619 9732 142114 1.504725173726 19.994725173726 2946 24000000 24000000 70704000000 1.696896e+18
+103	3039589 92215 9732 142114 1.504725173726 19.994725173726 2946 14 1088 2239784 2274373936
+104	3131804 169996 9733 142119 1.504725173726 19.995115173726 5892 2 3 14730 38298
+105	3301800 350304 9733 142150 1.504725173726 19.995160916166 12154 0 3 15470 34256
+106	3652104 442128 9733 142150 1.504725173726 19.995160916166 15360 0 0 0 0
+107	4094232 442128 9733 142150 1.504725173726 19.995160916166 15360 0 0 0 0
+108	4536360 442128 9733 142150 1.504725173726 19.995160916166 15360 0 0 0 0
+109	4978488 442128 9733 142150 1.504725173726 19.995160916166 15360 0 0 0 0
+110	5420616 339993 9733 142119 1.504725173726 19.995115173726 11784 0 2 11784 17676
+111	5760609 350305 9735 142148 1.504726044946 19.995160044946 12154 0 3 14915 32591
+112	6110914 639714 9735 142148 1.504726044946 19.995160044946 22212 0 0 0 0
+113	6750628 639714 9735 142148 1.504726044946 19.995160044946 22212 0 0 0 0
+114	7390342 700610 9735 142148 1.504726044946 19.995160044946 24308 0 2 2096 4192
+115	8090952 639714 9735 142148 1.504726044946 19.995160044946 22212 0 0 0 0
+116	8730666 660320 9735 142148 1.504726044946 19.995160044946 22952 0 2 740 1480
+117	9390986 76469 9736 142118 1.505115173726 19.995115173726 2422 384 1088 2232448 2274271232
+118	9467455 76469 9736 142118 1.505115173726 19.995115173726 2422 384 1088 2232448 2274271232
+119	9543924 76469 9736 142118 1.505115173726 19.995115173726 2422 384 1088 2232448 2274271232
+120	9620393 92217 9736 142118 1.505115173726 19.995115173726 2946 14 1088 2239784 2274373936
+121	9712610 92217 9736 142118 1.505115173726 19.995115173726 2946 14 1088 2239784 2274373936
+122	9804827 92217 9736 142118 1.505115173726 19.995115173726 2946 14 1088 2239784 2274373936
+123	9897044 240432 9736 142146 1.505115173726 19.995159173726 7821 0 4.4e-05 0.114708 5.0471520000002e-06
+124	10137476 92217 9740 142122 1.505116044946 19.995116044946 2946 14 1088 2239784 2274373936
+125	10229693 92217 9740 142122 1.505116044946 19.995116044946 2946 14 1088 2239784 2274373936
+126	10321910 92217 9740 142122 1.505116044946 19.995116044946 2946 14 1088 2239784 2274373936
+127	10414127 112071 9740 142122 1.505116044946 19.995116044946 3131 24000000 24000000 75144000000 1.803456e+18
+128	10526198 76469 9740 142122 1.505116044946 19.995116044946 2422 356 1060 2164632 2151152992
+129	10602667 92741 9742 142124 1.505116044946 19.995116044946 2946 348 1052 2327608 2180132384
+130	10695408 92741 9744 142126 1.505116044946 19.995116044946 2946 348 1052 2327608 2180132384
+131	10788149 77041 9745 142127 1.505116044946 19.995116044946 2422 2928 8560 17510816 140460021248
+132	10865190 4509 9745 141498 0.1 19.9 199 0 1002400 174105760 1.656126932224e+14
+133	10869699 69775 9745 142127 1.505116044946 19.995116044946 2422 0 0 0 0
+134	10939474 77041 9745 142127 1.505116044946 19.995116044946 2422 2928 8560 17510816 140460021248
+135	11016515 4509 9745 141498 0.1 19.9 199 0 1002400 174105760 1.656126932224e+14
+136	11021024 76469 9745 142127 1.505116044946 19.995116044946 2422 366 1070 2188852 2194687832
+137	11097493 76469 9746 142128 1.505116907346 19.995116907346 2422 366 1070 2188852 2194687832
+138	11173962 76469 9748 142130 1.505116957346 19.995116957346 2422 366 1070 2188852 2194687832
+139	11250431 76469 9748 142130 1.505116957346 19.995116957346 2422 366 1070 2188852 2194687832
+140	11326900 92741 9749 142131 1.505116957346 19.995116957346 2946 348 1052 2327608 2180132384
+141	11419641 92741 9751 142133 1.505116957346 19.995116957346 2946 348 1052 2327608 2180132384
+142	11512382 72197 9752 142134 1.505116957346 19.995116957346 2422 -1 -1 -2422 2422
+143	11584579 77041 9752 142134 1.505116957346 19.995116957346 2422 2928 8560 17510816 140460021248
+144	11661620 4509 9752 141505 0.1 19.9 199 0 1002400 174105760 1.656126932224e+14
+145	11666129 77041 9752 142134 1.505116957346 19.995116957346 2422 2928 8560 17510816 140460021248
+146	11743170 4509 9752 141505 0.1 19.9 199 0 1002400 174105760 1.656126932224e+14
+147	11747679 69775 9752 142134 1.505116957346 19.995116957346 2422 0 0 0 0
+148	11817454 77041 9752 142134 1.505116957346 19.995116957346 2422 2928 8560 17510816 140460021248
+149	11894495 4509 9752 141505 0.1 19.9 199 0 1002400 174105760 1.656126932224e+14
+150	11899004 279100 9752 142134 1.505116957346 19.995116957346 9688 0 0 0 0
+151	12178104 308164 9752 142134 1.505116957346 19.995116957346 9688 2928 8560 70043264 561840084992
+152	12486268 4586 9752 141505 0.1 19.9 199 0 4009600 696423040 2.6498030915584e+15
+153	12490854 77041 9752 142134 1.505116957346 19.995116957346 2422 2928 8560 17510816 140460021248
+154	12567895 4509 9752 141505 0.1 19.9 199 0 1002400 174105760 1.656126932224e+14
+155	12572404 77041 9752 142134 1.505116957346 19.995116957346 2422 2928 8560 17510816 140460021248
+156	12649445 4509 9752 141505 0.1 19.9 199 0 1002400 174105760 1.656126932224e+14
+157	12653954 76469 9752 142134 1.505116957346 19.995116957346 2422 366 1070 2188852 2194687832
+158	12730423 76469 9753 142135 1.505117819746 19.995117819746 2422 366 1070 2188852 2194687832
+159	12806892 76469 9755 142137 1.505117869746 19.995117869746 2422 366 1070 2188852 2194687832
+160	12883361 76469 9755 142137 1.505117869746 19.995117869746 2422 366 1070 2188852 2194687832
+161	12959830 76469 9756 142138 1.505117869746 19.995117869746 2422 348 1052 2145256 2116673888
+162	13036299 76469 9758 142140 1.505117869746 19.995117869746 2422 328 1032 2096816 2031832448
+163	13112768 58870 9759 142141 1.505117869746 19.995117869746 1850 1024 1024 1894400 1939865600
+164	13171638 4402 9759 141512 0.1 19.9 199 0 819200 150732800 1.2348030976e+14
+165	13176040 75520 9759 142141 1.505117869746 19.995117869746 1850 0.00039269602 0.00039269602 0.72648763700003 0.00028528880362909
+166	13251560 58012 9759 142141 1.505117869746 19.995117869746 1850 142 1991 1973025 2631866425
+167	13309572 93809 9760 142142 1.505126044946 19.995126044946 3131 14 384 244004 78167896
+168	13403381 180308 9761 142148 1.505126044946 19.995160044946 6262 2 3 15655 40703
+169	13583689 360616 9761 142148 1.505126044946 19.995160044946 12524 0 2 12524 18786
+170	13944305 93809 9765 142147 1.505160044946 19.995160044946 3131 14 384 244004 78167896
+171	14038114 88469 9765 142147 1.505160044946 19.995160044946 2946 14 384 235124 77741656
+172	14126583 93809 9765 142147 1.505160044946 19.995160044946 3131 14 384 244004 78167896
+173	14220392 93809 9769 142151 1.505160916166 19.995160916166 3131 14 384 244004 78167896
+174	14314201 88469 9769 142151 1.505160916166 19.995160916166 2946 14 384 235124 77741656
+175	14402670 93809 9769 142151 1.505160916166 19.995160916166 3131 14 384 244004 78167896
+176	14496479 98839 9769 142151 1.505160916166 19.995160916166 2422 0.00020374244 0.00087374244 0.93800418967999 0.00038802072661321
+177	14595318 22512 9815 136015 1.521159015834 19.020779997213 524 5737.6349319249 483954.45612104 5270876.7666648 279003189232.85
+178	14617830 16272 9816 136016 1.521159015834 19.020779997213 524 328 328 171872 56374016
+179	14634102 16272 9818 136018 1.521159015834 19.020779997213 524 348 348 182352 63458496
+180	14650374 16796 9819 136019 1.521159015834 19.020779997213 524 2928 2928 1534272 4492348416
+181	14667170 3849 9819 135843 0.1 19 190 0 146400 15284160 2203308288000
+182	14671019 15224 9819 136019 1.521159015834 19.020779997213 524 0 0 0 0
+183	14686243 16796 9819 136019 1.521159015834 19.020779997213 524 2928 2928 1534272 4492348416
+184	14703039 3849 9819 135843 0.1 19 190 0 146400 15284160 2203308288000
+185	14706888 16272 9819 136019 1.521159015834 19.020779997213 524 366 366 191784 70192944
+186	14723160 16272 9820 136020 1.521159315034 19.020780296413 524 366 366 191784 70192944
+187	14739432 16272 9822 136022 1.521159365034 19.020780346413 524 366 366 191784 70192944
+188	14755704 16272 9822 136022 1.521159365034 19.020780346413 524 366 366 191784 70192944
+189	14771976 15748 9826 136026 1.521159365034 19.020780346413 524 -1 -1 -524 524
+190	14787724 16796 9826 136026 1.521159365034 19.020780346413 524 2928 2928 1534272 4492348416
+191	14804520 3849 9826 135850 0.1 19 190 0 146400 15284160 2203308288000
+192	14808369 16796 9826 136026 1.521159365034 19.020780346413 524 2928 2928 1534272 4492348416
+193	14825165 3849 9826 135850 0.1 19 190 0 146400 15284160 2203308288000
+194	14829014 15224 9826 136026 1.521159365034 19.020780346413 524 0 0 0 0
+195	14844238 16796 9826 136026 1.521159365034 19.020780346413 524 2928 2928 1534272 4492348416
+196	14861034 3849 9826 135850 0.1 19 190 0 146400 15284160 2203308288000
+197	14864883 60896 9826 136026 1.521159365034 19.020780346413 2096 0 0 0 0
+198	14925779 67184 9826 136026 1.521159365034 19.020780346413 2096 2928 2928 6137088 17969393664
+199	14992963 3856 9826 135850 0.1 19 190 0 585600 61136640 35252932608000
+200	14996819 16796 9826 136026 1.521159365034 19.020780346413 524 2928 2928 1534272 4492348416
+201	15013615 3849 9826 135850 0.1 19 190 0 146400 15284160 2203308288000
+202	15017464 16796 9826 136026 1.521159365034 19.020780346413 524 2928 2928 1534272 4492348416
+203	15034260 3849 9826 135850 0.1 19 190 0 146400 15284160 2203308288000
+204	15038109 16272 9826 136026 1.521159365034 19.020780346413 524 366 366 191784 70192944
+205	15054381 16272 9827 136027 1.521159664234 19.020780645613 524 366 366 191784 70192944
+206	15070653 16272 9829 136029 1.521159714234 19.020780695613 524 366 366 191784 70192944
+207	15086925 16272 9829 136029 1.521159714234 19.020780695613 524 366 366 191784 70192944
+208	15103197 16272 9834 136034 1.521159714234 19.020780695613 524 356 356 186544 66409664
+209	15119469 16796 9834 136034 1.521159714234 19.020780695613 524 3072 3072 1609728 4945084416
+210	15136265 3849 9834 135858 0.1 19 190 0 153600 16035840 2425356288000
+211	15140114 15569 9834 136034 1.521159714234 19.020780695613 524 0 31 7946 166750
+212	15155683 15224 9836 136036 1.521159714234 19.020780695613 524 0 0 0 0
+213	15170907 16796 9836 136036 1.521159714234 19.020780695613 524 3072 3072 1609728 4945084416
+214	15187703 3849 9836 135860 0.1 19 190 0 153600 16035840 2425356288000
+215	15191552 16272 9840 136040 1.521317714234 19.020938695613 524 384 384 201216 77266944
+216	15207824 16272 9840 136040 1.521317714234 19.020938695613 524 384 384 201216 77266944
+217	15224096 16272 9840 136040 1.521317714234 19.020938695613 524 384 384 201216 77266944
+218	15240368 65391 9840 141887 1.521317714234 19.96244636964 2127 0 4.4e-05 0.031196 1.372624e-06
+219	15305759 16272 9843 136043 1.521318585454 19.020939566833 524 356 356 186544 66409664
+220	15322031 16272 9846 136046 1.521318585454 19.020939566833 524 328 328 171872 56374016
+221	15338303 17771 9847 142154 1.521318585454 20 525 0.00015956962 0.007564738905 0.091179219784999 7.0567605641342e-05
+222	15356074 22497 9847 136047 1.521318585454 19.020939566833 524 5737.1375219791 480332.05683816 5267138.1977622 275507947724.42
+223	15378571 21512 9856 136056 1.521363456674 19.020984438053 524 0.00020374244 0.00020374244 0.10676103856 2.1751754493148e-05
+224	15400083 5518 10037 141876 1.56235636964 19.96235636964 185 384 384 71040 27279360
+225	15405601 4050 10037 141876 0.1 19.9 199 0 3840 706560 2713190400
+226	15409651 5148 10037 141876 1.56235636964 19.96235636964 185 0 7 683 3481
+227	15414799 5239 10039 141878 1.56235636964 19.96235636964 185 0 9.9268522e-05 0.000374879654 2.7047822140451e-08
+228	15420038 5525 10039 141878 1.56235636964 19.96235636964 185 384 384 71040 27279360
+229	15425563 4050 10039 141878 0.1 19.9 199 0 3840 706560 2713190400
+230	15429613 5340 10043 141882 1.56240236964 19.96240236964 185 48 48 8880 426240
+231	15434953 5340 10043 141882 1.56240236964 19.96240236964 185 48 48 8880 426240
+232	15440293 5340 10043 141882 1.56240236964 19.96240236964 185 48 48 8880 426240
+233	15445633 5340 10043 141882 1.56240236964 19.96240236964 185 48 48 8880 426240
+234	15450973 5340 10043 141882 1.56240236964 19.96240236964 185 48 48 8880 426240
+235	15456313 5340 10043 141882 1.56240236964 19.96240236964 185 48 48 8880 426240
+236	15461653 6265 10043 141882 1.56240236964 19.96240236964 185 4.6e-05 4.6e-05 0.00851 3.9146e-07
+237	15467918 5340 10046 141885 1.56240324086 19.96240324086 185 48 48 8880 426240
+238	15473258 5340 10046 141885 1.56240324086 19.96240324086 185 48 48 8880 426240
+239	15478598 24396 10971 142066 1.764938203736 19.985425628725 572 10727.947209542 91794.990896194 10222984.80898 248077574516.46
+240	15502994 25658 11037 142154 1.765890485786 20 631 0.00015956962 1.02432531206 26.512593091116 20.004462021844
+241	15528652 24400 11037 142098 1.765890485786 19.985585198345 572 10386.300966817 72210.180605909 9389714.9010775 193580716464.89
+

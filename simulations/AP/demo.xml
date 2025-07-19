@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<config>
+    <interface hosts="server" names="ethg*" address="10.0.1.1" netmask="255.255.255.0"/>
+    <interface hosts="wifiRouter" names="ethg*" address="10.0.1.2" netmask="255.255.255.0"/>
+    <interface hosts="accessPoint" names="ethg*" address="10.0.2.1" netmask="255.255.255.0"/>
+    <interface hosts="client*" names="wlan*" address="10.0.2.x" netmask="255.255.255.0"/>
+    </config>

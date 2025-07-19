@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<internetCloud symmetric="true">
+  <parameters>
+    <delayer module="ipv4Delayer">
+      <delay type="normal" mean="0.05s" deviation="0.005s" />
+    </delayer>
+  </parameters>
+  <routing>
+    <router id="10.1.1.1"> <!-- server -->
+      <route destination="10.7.1.0" netmask="255.255.255.0" gateway="10.1.1.2" />
+      <route destination="10.8.1.0" netmask="255.255.255.0" gateway="10.1.1.2" />
+    </router>
+    <router id="10.1.1.2"> <!-- router0 -->
+      <route destination="10.7.1.0" netmask="255.255.255.0" gateway="10.2.1.2" />
+      <route destination="10.8.1.0" netmask="255.255.255.0" gateway="10.3.1.2" />
+    </router>
+  </routing>
+</internetCloud>
