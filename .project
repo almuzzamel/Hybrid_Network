@@ -3,8 +3,6 @@
 	<name>abcd</name>
 	<comment></comment>
 	<projects>
-		<project>inet4.5</project>
-		<project>simu5g</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
