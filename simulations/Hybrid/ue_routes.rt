@@ -1,0 +1,10 @@
+ifconfig:
+name: wlan0  inet_addr: 192.168.2.10  netmask: 255.255.255.0  mtu: 1500
+name: cellular  inet_addr: 192.168.1.10  netmask: 255.255.255.0  mtu: 1500
+ifconfigend.
+
+route:
+default:  192.168.2.1  0.0.0.0  G  10  wlan0
+default:  192.168.1.1  0.0.0.0  G  100  cellular
+10.0.0.0  *  255.0.0.0  G  0  wlan0
+routeend.

@@ -5,20 +5,8 @@
 +R #0  0s  Hybrid.router1  <unspec>  127.0.0.0/8  <unspec>  lo0
 +R #0  0s  Hybrid.router0  <unspec>  127.0.0.0/8  <unspec>  lo0
 *I  #0  0s  Hybrid.router2  ppp0 <unspec>
+*I  #0  0s  Hybrid.router2  ppp0 <unspec>
 *I  #0  0s  Hybrid.router2  eth0 <unspec>
 *I  #0  0s  Hybrid.router2  eth0 <unspec>
 *I  #0  0s  Hybrid.router1  eth0 <unspec>
 *I  #0  0s  Hybrid.router1  eth0 <unspec>
-*I  #0  0s  Hybrid.router1  eth1 <unspec>
-*I  #0  0s  Hybrid.router1  eth1 <unspec>
-*I  #0  0s  Hybrid.router0  ppp0 <unspec>
-*I  #0  0s  Hybrid.router0  eth0 <unspec>
-*I  #0  0s  Hybrid.router0  eth0 <unspec>
-*I  #0  0s  Hybrid.router0  eth1 <unspec>
-*I  #0  0s  Hybrid.router0  eth1 <unspec>
--R #2811  0.65442983808s  Hybrid.ue[0]  <unspec>  127.0.0.0/8  <unspec>  lo0
-+R #2811  0.65442983808s  Hybrid.ue[0]  <unspec>  127.0.0.0/8  <unspec>  lo0
-*I  #2811  0.65442983808s  Hybrid.ue[0]  wlan0 <unspec>
--R #2811  0.65442983808s  Hybrid.ue[0]  <unspec>  127.0.0.0/8  <unspec>  lo0
-+R #2811  0.65442983808s  Hybrid.ue[0]  <unspec>  127.0.0.0/8  <unspec>  lo0
-*I  #2811  0.65442983808s  Hybrid.ue[0]  wlan0 <unspec>

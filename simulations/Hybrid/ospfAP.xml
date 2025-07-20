@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<OSPFASConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="OSPF.xsd">
+
+  <!-- Areas -->
+  <Area id="0.0.0.1">
+    <AddressRange address="10.10.17.0" mask="255.255.255.0" />
+    <AddressRange address="10.10.18.0" mask="255.255.255.0" />
+  </Area>
+
+  <!-- Routers -->
+  <Router name="accessPoint" RFC1583Compatible="true">
+    <PointToPointInterface ifName="eth0" areaID="0.0.0.1" interfaceOutputCost="10" />
+    <BroadcastInterface ifName="Ieee80211Nic" areaID="0.0.0.1" interfaceOutputCost="5" routerPriority="1" />
+  </Router>
+
+</OSPFASConfig>
