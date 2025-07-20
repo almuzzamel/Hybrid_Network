@@ -1,50 +1,64 @@
-<?xml version="1.0"?>
 <config>
-  <!-- Core network connections -->
-  <interface among="server internetCloud" address="10.0.1.x" netmask="255.255.255.0"/>
-  <interface among="internetCloud router0" address="10.0.2.x" netmask="255.255.255.0"/>
-  <interface among="router0 router1" address="10.0.3.x" netmask="255.255.255.0"/>
-  <interface among="router0 router2" address="10.0.4.x" netmask="255.255.255.0"/>
-  
-  <!-- WiFi Domain -->
-  <interface among="router1 accessPoint" address="10.0.5.x" netmask="255.255.255.0"/>
-  
-  <!-- LTE Domain -->
-  <interface among="router2 pgw" address="10.0.6.x" netmask="255.255.255.0"/>
-  
-  <!-- Wireless interfaces - UE connectivity -->
-  <interface among="accessPoint ue[*]" address="10.0.8.x" netmask="255.255.255.0"/>
-  
-  <!-- Default routes for endpoints -->
-  <route hosts="server" destination="*" interface="ppp0" />
-  <route hosts="ue[*]" destination="*" interface="wlan0" />
-  <route hosts="ue[*]" destination="*" interface="cellular" />
-  
-  <!-- eNB interfaces - fully specified -->
-  <interface hosts="eNB" names="ppp0" address="10.0.7.2" netmask="255.255.255.0"/>
-  <interface hosts="eNB" towards="ue[*]" address="10.0.9.1" netmask="255.255.255.0"/>
+    <!-- Router interconnections -->
+<interface hosts="router0" towards="internetCloud" address="10.0.1.1" netmask="255.255.255.252"/>
+<interface hosts="internetCloud" towards="router0" address="10.0.1.2" netmask="255.255.255.252"/>
 
-  <!-- PGW interfaces - fully specified -->
-  <interface hosts="pgw" names="filterGate" address="10.0.6.2" netmask="255.255.255.0"/>
-  <interface hosts="pgw" names="ppp0" address="10.0.7.1" netmask="255.255.255.0"/>
+<interface hosts="router0" towards="router1" address="10.0.2.1" netmask="255.255.255.252"/>
+<interface hosts="router1" towards="router0" address="10.0.2.2" netmask="255.255.255.252"/>
 
-  <!-- UE interfaces - fully specified for at least the first UE -->
-  <interface hosts="ue[0]" names="cellular" address="10.0.9.2" netmask="255.255.255.0"/>
-  <!--interface hosts="ue[1]" names="cellular" address="10.0.9.3" netmask="255.255.255.0"/-->
-  <interface hosts="ue[0]" names="wlan0" address="10.0.8.2" netmask="255.255.255.0"/>
-  <!--nterface hosts="ue[1]" names="wlan0" address="10.0.8.3" netmask="255.255.255.0"/-->
-  <interface hosts="server" names="ppp0" address="10.0.1.1" netmask="255.255.255.0"/>
-  <interface hosts="internetCloud" names="ppp0" address="10.0.1.2" netmask="255.255.255.0"/>
-  <interface hosts="internetCloud" names="ppp1" address="10.0.2.1" netmask="255.255.255.0"/>
-  <interface hosts="router0" names="ppp0" address="10.0.2.2" netmask="255.255.255.0"/>
-  <interface hosts="router0" names="eth0" address="10.0.3.1" netmask="255.255.255.0"/>
-  <interface hosts="router0" names="eth1" address="10.0.4.1" netmask="255.255.255.0"/>
-  <interface hosts="router1" names="eth0" address="10.0.3.2" netmask="255.255.255.0"/>
-  <interface hosts="router1" names="eth1" address="10.0.5.1" netmask="255.255.255.0"/>
-  <interface hosts="router2" names="eth0" address="10.0.4.2" netmask="255.255.255.0"/>
-  <interface hosts="router2" names="ppp0" address="10.0.6.1" netmask="255.255.255.0"/>
-  <interface hosts="accessPoint" names="wlan0" address="10.0.8.1" netmask="255.255.255.0"/>
-    
-  <!-- OSPF multicast group -->
-  <multicast-group hosts="router* pgw ue*" address="224.0.0.0"/>
+<interface hosts="router0" towards="router2" address="10.0.3.1" netmask="255.255.255.252"/>
+<interface hosts="router2" towards="router0" address="10.0.3.2" netmask="255.255.255.252"/>
+
+<interface hosts="router2" towards="pgw" address="10.0.4.1" netmask="255.255.255.252"/>
+<interface hosts="pgw" towards="router2" address="10.0.4.2" netmask="255.255.255.252"/>
+
+<!-- UE IP Configuration -->
+<interface hosts="ue[*]" names="wlan0" address="192.168.2.10" netmask="255.255.255.0"/>
+<interface hosts="ue[*]" names="cellular" address="192.168.1.10" netmask="255.255.255.0"/>
+
+<!-- Cellular network -->
+<interface hosts="pgw" towards="eNB" address="192.168.1.1" netmask="255.255.255.0"/>
+<interface hosts="eNB" towards="pgw" address="192.168.1.2" netmask="255.255.255.0"/>
+
+<!-- WiFi network -->
+<interface hosts="router1" towards="accessPoint" address="192.168.2.1" netmask="255.255.255.0"/>
+<interface hosts="accessPoint" towards="router1" address="192.168.2.2" netmask="255.255.255.0"/>
+
+<!-- Server -->
+<interface hosts="server" towards="internetCloud" address="10.99.12.1" netmask="255.255.255.0"/>
+<interface hosts="internetCloud" towards="server" address="10.99.12.2" netmask="255.255.255.0"/>
+
+<!-- OSPF routing -->
+<route hosts="server" destination="*" gateway="internetCloud"/>
+
+<!-- Default gateways for UE devices -->
+<route hosts="ue[*]" destination="*" gateway="192.168.2.1" interface="wlan0" metric="10"/>
+<route hosts="ue[*]" destination="*" gateway="192.168.1.1" interface="cellular" metric="100"/>
+
+<!-- Multicast routing for OSPF -->
+<route hosts="router*" destination="224.0.0.0" netmask="240.0.0.0" interface="eth0"/>
+
+<!-- OSPF Configuration -->
+<!-- Define router interfaces with appropriate network types -->
+<!-- Point-to-Point interfaces between routers -->
+<interface hosts="router0" names="ppp0" towards="router1" ospf="true" area="0.0.0.0" network_type="pointtopoint"/>
+<interface hosts="router0" names="ppp1" towards="router2" ospf="true" area="0.0.0.0" network_type="pointtopoint"/>
+<interface hosts="router1" names="ppp0" towards="router0" ospf="true" area="0.0.0.0" network_type="pointtopoint"/>
+<interface hosts="router2" names="ppp0" towards="router0" ospf="true" area="0.0.0.0" network_type="pointtopoint"/>
+<interface hosts="router2" names="ppp1" towards="pgw" ospf="true" area="0.0.0.0" network_type="pointtopoint"/>
+
+<!-- Broadcast interfaces -->
+<interface hosts="router0" names="ethg0" towards="internetCloud" ospf="true" area="0.0.0.0" network_type="broadcast"/>
+<interface hosts="router1" names="ethg0" towards="accessPoint" ospf="true" area="0.0.0.0" network_type="broadcast"/>
+<interface hosts="pgw" names="ethg0" towards="eNB" ospf="true" area="0.0.0.0" network_type="broadcast"/>
+
+<!-- Hello and Dead timer configuration -->
+<ospf_interface hosts="router*" interface="ppp*" hello_interval="10" dead_interval="40"/>
+<ospf_interface hosts="router*" interface="ethg*" hello_interval="10" dead_interval="40"/>
+<ospf_interface hosts="pgw" interface="ethg*" hello_interval="10" dead_interval="40"/>
+
+<!-- Multicast groups for OSPF - 224.0.0.5 (AllSPFRouters) and 224.0.0.6 (AllDRouters) -->
+<multicast-group hosts="router*" interfaces="ppp* ethg*" address="224.0.0.5"/>
+<multicast-group hosts="router*" interfaces="ethg*" address="224.0.0.6"/>
+<multicast-group hosts="pgw" interfaces="ethg*" address="224.0.0.5"/>
 </config>

@@ -137,6 +137,16 @@ void VoIPSenderWithHandover::sendVoIPPacket()
 {
     if (!isAppActive) return;
 
+    // Check if destination address is unspecified and resolve it if needed
+    if (destAddress.isUnspecified()) {
+        destAddress = L3AddressResolver().resolve(par("destAddress"));
+
+        // If still unspecified, log error and return
+        if (destAddress.isUnspecified()) {
+            EV_ERROR << "Cannot resolve destination address: " << par("destAddress").stringValue() << endl;
+            return;
+        }
+    }
     // Create packet with sequence number
     Packet *packet = createVoIPPacketWithSeq(nextSequenceNumber);
 

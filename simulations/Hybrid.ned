@@ -15,6 +15,7 @@
 
 package abcd.simulations;
 
+import inet.applications.dhcp.DhcpServer;
 import inet.networklayer.configurator.ipv4.Ipv4NetworkConfigurator;
 import inet.networklayer.ipv4.RoutingTableRecorder;
 import inet.node.inet.Router;
@@ -39,6 +40,10 @@ import inet.networklayer.ipv4.Ipv4RoutingTable;
 import inet.routing.ospfv2.Ospfv2;
 import inet.node.ospfv2.OspfRouter;
 
+
+
+
+
 //
 // This is A Hybrid Network (Wi-Fi & LTE) for Graduation Project Implemented by Al Muzzamil Mohammed
 //
@@ -52,10 +57,12 @@ network Hybrid
         double handoverHysteresis = default(3); // dB
         double handoverMargin = default(2); // dB
 
+
     submodules:
         visualizer: IntegratedCanvasVisualizer {
             @display("p=38.615387,670.3631");
         }
+
 
         channelControl: LteChannelControl {
             @display("p=50,25;is=s");
@@ -103,19 +110,13 @@ network Hybrid
         router0: Router {
             @display("p=698.3174,255.76926;i=device/smallrouter");
         }
+        
     connections:
-        // LTE Domain connections
-        router2.ethg++ <--> Eth10G <--> pgw.filterGate;
-        pgw.pppg++ <--> Eth10G <--> eNB.ppp;
-        
-        // Internet/Server connections
-        internetCloud.pppg++ <--> Eth10G <--> server.pppg++;
-        
-        // WiFi Domain connections
-        router1.ethg++ <--> Eth10G <--> accessPoint.ethg++;
-        
-        // Core backbone connections
-        router0.pppg++ <--> Eth10G <--> internetCloud.pppg++;
+        server.pppg++ <--> Eth10G <--> internetCloud.pppg++;
+        internetCloud.pppg++ <--> Eth10G <--> router0.pppg++;
         router0.ethg++ <--> Eth10G <--> router2.ethg++;
         router0.ethg++ <--> Eth10G <--> router1.ethg++;
+        router1.ethg++ <--> Eth10G <--> accessPoint.ethg++;
+        router2.pppg++ <--> Eth10G <--> pgw.filterGate;
+        pgw.pppg++ <--> Eth10G <--> eNB.ppp;
 }
