@@ -5,6 +5,7 @@ import inet.node.ethernet.Eth10G;
 import inet.node.inet.Router;
 import inet.node.inet.StandardHost;
 import inet.node.inet.WirelessHost;
+import inet.node.internetcloud.InternetCloud;
 import inet.node.wireless.AccessPoint;
 import abcd.nodes.DualUe;
 
@@ -17,7 +18,8 @@ import inet.visualizer.canvas.networklayer.NetworkRouteCanvasVisualizer;
 import inet.visualizer.canvas.networklayer.RoutingTableCanvasVisualizer;
 
 import inet.networklayer.diffserv.DiffservQueue;
-
+import ned.IdealChannel;
+import ned.DatarateChannel;
 
 
 
@@ -26,47 +28,64 @@ network StaticAP
     parameters:
         int numUe = default(1);
         @display("bgb=1200,700");
+        
+         types:
+        channel C extends DatarateChannel
+        {
+            delay = 2ms;
+            datarate = 1Gbps;
+        }
 
     submodules:
         visualizer: IntegratedCanvasVisualizer {
             @display("p=50,150");
-            
-                    }
+
+        }
         // WiFi Radio Medium
         radioMedium: Ieee80211ScalarRadioMedium {
             @display("p=50,50;is=s");
         }
-        
-        
-         routingRecorder: RoutingTableRecorder {
+
+
+        routingRecorder: RoutingTableRecorder {
             @display("p=50,75;is=s");
         }
 
         configurator: Ipv4NetworkConfigurator {
-            @display("p=64.715,245.315");
+            @display("p=108.36,459.025");
         }
 
         // Server
         server: StandardHost {
-            @display("p=200,150;is=n;i=device/server");
+            @display("p=153.51,346.15;is=n;i=device/server");
         }
 
         // WiFi Infrastructure
         wifiRouter: Router {
-            @display("p=517.72,124.915;i=device/smallrouter");
+            @display("p=611.02997,158.025;i=device/smallrouter");
         }
 
         accessPoint: AccessPoint {
-            @display("p=663.705,296.485;i=device/accesspoint");
+            @display("p=717.885,331.1;i=device/accesspoint");
         }
 
         // WiFi Clients (using standard WirelessHost instead of DualUe)
         client[numUe]: WirelessHost {
             @display("p=500,500");
-       }
-        
+        }
+
+
+        internetCloud: InternetCloud {
+            @display("p=462.035,58.695");
+        }
+        // WiFi Infrastructure
+        serverRouter: Router {
+            @display("p=293.475,147.48999;i=device/smallrouter");
+        }
 
     connections:
-        server.ethg++ <--> Eth10G <--> wifiRouter.ethg++;
+        wifiRouter.pppg++ <--> Eth10G <--> internetCloud.pppg++;
         wifiRouter.ethg++ <--> Eth10G <--> accessPoint.ethg++;
+       serverRouter.pppg++  <--> Eth10G <--> internetCloud.pppg++;
+        serverRouter.pppg++ <--> Eth10G <--> server.pppg++;
 }

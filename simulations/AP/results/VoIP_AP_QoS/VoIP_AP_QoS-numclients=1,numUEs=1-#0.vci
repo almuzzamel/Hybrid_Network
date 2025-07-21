@@ -1,0 +1,701 @@
+file 34901 1753125719                                           
+version 3
+run VoIP_AP_QoS-0-20250721-22:19:07-1164
+attr configname VoIP_AP_QoS
+attr datetime 20250721-22:19:07
+attr datetimef 20250721-221907
+attr experiment VoIP_AP_QoS
+attr inifile static_ap.ini
+attr iterationvars "$numclients=1, $numUEs=1"
+attr iterationvarsd numclients=1/numUEs=1
+attr iterationvarsf numclients=1,numUEs=1-
+attr measurement "$numclients=1, $numUEs=1"
+attr network abcd.simulations.StaticAP
+attr processid 1164
+attr repetition 0
+attr replication #0
+attr resultdir results/VoIP_AP_QoS
+attr runnumber 0
+attr seedset 0
+itervar numUEs 1
+itervar numclients 1
+config image-path ../../../inet4.5/images;../../../simu5g/images
+config result-dir results/VoIP_AP_QoS
+config **.client[*].app[*].*.endToEndDelay:vector.vector-recording true
+config **.client[*].app[*].*.jitter:vector.vector-recording true
+config **.client[*].app[*].*.packetLoss:vector.vector-recording true
+config **.server.app[*].*.endToEndDelay:vector.vector-recording true
+config **.server.app[*].*.jitter:vector.vector-recording true
+config **.server.app[*].*.packetLoss:vector.vector-recording true
+config **.VoIPReceiver.endToEndDelay:vector.vector-recording true
+config **.VoIPReceiver.jitter:vector.vector-recording true
+config **.numclient 1
+config *.client[*].mobility.initFromDisplayString true
+config *.client[*].mobility.initialX uniform(500m,500m)
+config *.client[*].mobility.initialY uniform(500m,500m)
+config *.client[*].mobility.initialZ 0m
+config *.client[*].mobility.speed 0mps
+config *.client[*].mobility.typename StationaryMobility
+config *.client[*].numApps 3
+config *.server.numApps 3
+config *.client[*].app[2].typename UdpBasicApp
+config *.client[*].app[2].destAddresses "\"server\""
+config *.client[*].app[2].destPort 5000
+config *.client[*].app[2].messageLength 1024B
+config *.client[*].app[2].sendInterval 0.01s
+config *.client[*].app[2].startTime "uniform(0s, 0.1s)"
+config *.server.app[2].typename UdpSink
+config *.server.app[2].localPort 5000
+config *.server.app[0].typename VoIPReceiver
+config *.server.app[0].localPort 4000
+config *.client[*].app[1].typename VoIPSender
+config *.clinte[*].app[1].qosClass "\"Voice\""
+config *.clinte[*].app[1].dscpMark 46
+config *.clinte[*].app[1].tos 0xE0
+config *.client[*].app[1].PacketSize 320
+config *.client[*].app[1].destAddress "\"server\""
+config *.client[*].app[1].destPort 4000
+config *.client[*].app[1].localPort 4088
+config *.client[*].app[1].sendInterval 0.1ms
+config *.client[*].app[1].startTime uniform(0s,0.02s)
+config *.client[*].app[0].typename VoIPReceiver
+config *.client[*].app[0].localPort 3000
+config *.server.app[1].typename VoIPSender
+config *.server.app[1].PacketSize 320
+config *.server.app[1].qosClass "\"Voice\""
+config *.server.app[1].dscpMark 46
+config *.server.app[1].tos 0xE0
+config *.server.app[1].destAddress "\"client\""
+config *.server.app[1].destPort 3000
+config *.server.app[1].localPort 3088
+config *.server.app[1].sendInterval 0.1ms
+config *.server.app[1].startTime uniform(0s,0.02s)
+config *.wifiRouter.ipv4.config.filters "xml(\"<filters>\" + \n    \"<filter name='VoIP' proto='udp' destPort='3000,4000'/>\" +\n    \"</filters>\")"
+config *.wifiRouter.queue.typename DiffservQueue
+config *.wifiRouter.queue.packetCapacity 100
+config *.wifiRouter.queue.bufferSize 1000
+config *.wifiRouter.queue.numQueues 4
+config *.wifiRouter.queue.classifier.typename DiffservClassifier
+config *.wifiRouter.queue.scheduler.typename WrrScheduler
+config *.wifiRouter.queue.scheduler.weights "\"4 3 2 1\""
+config *.app[*].dscpMark 46
+config *.wifiRouter.queue.queue[0].typename DropTailQueue
+config *.wifiRouter.queue.queue[0].packetCapacity 100
+config *.wifiRouter.queue.queue[1].typename REDQueue
+config *.wifiRouter.queue.queue[1].packetCapacity 200
+config *.wifiRouter.queue.queue[2].typename REDQueue
+config *.wifiRouter.queue.queue[2].packetCapacity 300
+config *.wifiRouter.queue.queue[3].typename DropTailQueue
+config *.wifiRouter.queue.queue[3].packetCapacity 400
+config *.accessPoint.wlan[0].mac.typename Ieee80211Mac
+config *.accessPoint.wlan[0].mac.qosStation true
+config *.accessPoint.wlan[0].mac.ctrl.typename Ieee80211MacCtrl
+config *.accessPoint.wlan[0].mac.dcf.channelAccess.typename EdcaChannelAccess
+config *.client[*].wlan[0].mac.typename Ieee80211Mac
+config *.client[*].wlan[0].mac.qosStation true
+config *.client[*].wlan[0].mac.ctrl.typename Ieee80211MacCtrl
+config *.client[*].wlan[0].mac.dcf.channelAccess.typename EdcaChannelAccess
+config *.*.wlan[0].mac.dcf.edca.edcaf[0].priority 6
+config *.*.wlan[0].mac.dcf.edca.edcaf[0].aifsn 2
+config *.*.wlan[0].mac.dcf.edca.edcaf[0].cwMin 7
+config *.*.wlan[0].mac.dcf.edca.edcaf[0].cwMax 15
+config *.*.wlan[0].mac.dcf.edca.edcaf[0].txopLimit 3264us
+config *.wifiRouter.eth[*].queue.*.packetDropped.scalar-recording true
+config *.mac.*.queueingTime.scalar-recording true
+config *.mac.*.txPk.scalar-recording true
+config *.mac.*.rxPkOk.scalar-recording true
+config *.app[*].playoutDelay.scalar-recording true
+config *.app[*].playoutLoss.scalar-recording true
+config *.app[*].mosScore.scalar-recording true
+config network abcd.simulations.StaticAP
+config sim-time-limit 20s
+config warmup-period 1.5s
+config **.vector-recording true
+config **.scalar-recording true
+config **.bin-recording true
+config **.mobility.constraintAreaMinZ 0m
+config **.mobility.constraintAreaMaxZ 0m
+config **.mobility.initFromDisplayString true
+config *.visualizer.*.mediumVisualizer.displaySignals true
+config *.visualizer.*.mediumVisualizer.displayTransmissions true
+config *.visualizer.*.mediumVisualizer.displayReceptions true
+config *.visualizer.*.networkRouteVisualizer.displayRoutes true
+config *.visualizer.*.networkRouteVisualizer.packetFilter "\"*VoIP*\""
+config *.visualizer.*.networkRouteVisualizer.lineColor "\"blue\""
+config *.visualizer.*.mobilityVisualizer.displayVelocities true
+config *.visualizer.*.mobilityVisualizer.displayMovementTrails true
+config *.visualizer.*.interfaceTableVisualizer.displayInterfaceTables true
+config *.visualizer.*.ieee80211Visualizer.displayAssociations true
+config *.visualizer.mediumVisualizer.displaySignals true
+config *.radioMedium.backgroundNoise.power -100dBm
+config *.accessPoint.wlan[0].radio.transmitter.power 4mW
+config *.ccessPoint.wlan[0].radio.transmitter.communicationRange 200m
+config *.accessPoint.wlan[0].radio.receiver.sensitivity -95dBm
+config num-rngs 2
+config **.internet.ipv4Delayer.rng-0 1
+config **.internetCloud.ipv4Delayer.config "xmldoc(\"./internet.xml\")"
+config **.numUe 1
+
+vector 0 StaticAP.server.ppp[0].queue queueLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + count(packetPushStarted) - count(packetPulled) - count(packetRemoved) - count(packetDropped)))"
+attr title "queue length"
+attr unit pk
+vector 1 StaticAP.server.ppp[0].queue queueBitLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + sum(packetLength(packetPushStarted)) - sum(packetLength(packetPulled)) - sum(packetLength(packetRemoved)) - sum(packetLength(packetDropped))))"
+attr title "queue bit length"
+attr unit b
+vector 2 StaticAP.server.udp passedUpPk:vector(count) ETV
+attr interpolationmode none
+attr recordingmode vector(count)
+attr source packetSentToUpper
+attr title "packets passed up, count"
+vector 3 StaticAP.server.udp droppedPkWrongPort:vector(count) ETV
+attr interpolationmode none
+attr recordingmode vector(count)
+attr source packetDropReasonIsNoPortFound(packetDropped)
+attr title "packets dropped (wrong port), count"
+vector 4 StaticAP.server.udp droppedPkBadChecksum:vector(count) ETV
+attr interpolationmode none
+attr recordingmode vector(count)
+attr source packetDropReasonIsIncorrectlyReceived(packetDropped)
+attr title "packets dropped (checksum error), count"
+vector 5 StaticAP.wifiRouter.ppp[0].queue queueLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + count(packetPushStarted) - count(packetPulled) - count(packetRemoved) - count(packetDropped)))"
+attr title "queue length"
+attr unit pk
+vector 6 StaticAP.wifiRouter.ppp[0].queue queueBitLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + sum(packetLength(packetPushStarted)) - sum(packetLength(packetPulled)) - sum(packetLength(packetRemoved)) - sum(packetLength(packetDropped))))"
+attr title "queue bit length"
+attr unit b
+vector 7 StaticAP.wifiRouter.eth[0].queue queueLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + count(packetPushStarted) - count(packetPulled) - count(packetRemoved) - count(packetDropped)))"
+attr title "queue length"
+attr unit pk
+vector 8 StaticAP.wifiRouter.eth[0].queue queueBitLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + sum(packetLength(packetPushStarted)) - sum(packetLength(packetPulled)) - sum(packetLength(packetRemoved)) - sum(packetLength(packetDropped))))"
+attr title "queue bit length"
+attr unit b
+vector 9 StaticAP.accessPoint.wlan[0].mac.dcf frameSequenceActive:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source warmup(count(frameSequenceStarted)-count(frameSequenceFinished))
+attr title "frame sequence active"
+vector 10 StaticAP.accessPoint.wlan[0].mac.dcf.channelAccess.pendingQueue queueLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + count(packetPushStarted) - count(packetPulled) - count(packetRemoved) - count(packetDropped)))"
+attr title "queue length"
+attr unit pk
+vector 11 StaticAP.accessPoint.wlan[0].mac.dcf.channelAccess.pendingQueue queueBitLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + sum(packetLength(packetPushStarted)) - sum(packetLength(packetPulled)) - sum(packetLength(packetRemoved)) - sum(packetLength(packetDropped))))"
+attr title "queue bit length"
+attr unit b
+vector 12 StaticAP.accessPoint.wlan[0].mac.dcf.channelAccess.inProgressFrames queueLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(count(packetEnqueued) - count(packetDequeued))"
+attr title "queue length"
+vector 13 StaticAP.accessPoint.wlan[0].mac.dcf.channelAccess.contention backoffActive:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source warmup(count(backoffStarted)-count(backoffStopped))
+attr title "backoff active"
+vector 14 StaticAP.accessPoint.wlan[0].mac.hcf frameSequenceActive:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source warmup(count(frameSequenceStarted)-count(frameSequenceFinished))
+attr title "frame sequence active"
+vector 15 StaticAP.accessPoint.wlan[0].mac.hcf blockAckAgreementActive:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source warmup(count(blockAckAgreementAdded)-count(blockAckAgreementDeleted))
+attr title "active block ack agreements"
+vector 16 StaticAP.accessPoint.wlan[0].mac.hcf.edca.edcaf[0].pendingQueue queueLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + count(packetPushStarted) - count(packetPulled) - count(packetRemoved) - count(packetDropped)))"
+attr title "queue length"
+attr unit pk
+vector 17 StaticAP.accessPoint.wlan[0].mac.hcf.edca.edcaf[0].pendingQueue queueBitLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + sum(packetLength(packetPushStarted)) - sum(packetLength(packetPulled)) - sum(packetLength(packetRemoved)) - sum(packetLength(packetDropped))))"
+attr title "queue bit length"
+attr unit b
+vector 18 StaticAP.accessPoint.wlan[0].mac.hcf.edca.edcaf[0].inProgressFrames queueLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(count(packetEnqueued) - count(packetDequeued))"
+attr title "queue length"
+vector 19 StaticAP.accessPoint.wlan[0].mac.hcf.edca.edcaf[0].contention backoffActive:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source warmup(count(backoffStarted)-count(backoffStopped))
+attr title "backoff active"
+vector 20 StaticAP.accessPoint.wlan[0].mac.hcf.edca.edcaf[0].txopProcedure txopActive:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source warmup(count(txopStarted)-count(txopEnded))
+attr title "txop active"
+vector 21 StaticAP.accessPoint.wlan[0].mac.hcf.edca.edcaf[1].pendingQueue queueLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + count(packetPushStarted) - count(packetPulled) - count(packetRemoved) - count(packetDropped)))"
+attr title "queue length"
+attr unit pk
+vector 22 StaticAP.accessPoint.wlan[0].mac.hcf.edca.edcaf[1].pendingQueue queueBitLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + sum(packetLength(packetPushStarted)) - sum(packetLength(packetPulled)) - sum(packetLength(packetRemoved)) - sum(packetLength(packetDropped))))"
+attr title "queue bit length"
+attr unit b
+vector 23 StaticAP.accessPoint.wlan[0].mac.hcf.edca.edcaf[1].inProgressFrames queueLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(count(packetEnqueued) - count(packetDequeued))"
+attr title "queue length"
+vector 24 StaticAP.accessPoint.wlan[0].mac.hcf.edca.edcaf[1].contention backoffActive:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source warmup(count(backoffStarted)-count(backoffStopped))
+attr title "backoff active"
+vector 25 StaticAP.accessPoint.wlan[0].mac.hcf.edca.edcaf[1].txopProcedure txopActive:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source warmup(count(txopStarted)-count(txopEnded))
+attr title "txop active"
+vector 26 StaticAP.accessPoint.wlan[0].mac.hcf.edca.edcaf[2].pendingQueue queueLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + count(packetPushStarted) - count(packetPulled) - count(packetRemoved) - count(packetDropped)))"
+attr title "queue length"
+attr unit pk
+vector 27 StaticAP.accessPoint.wlan[0].mac.hcf.edca.edcaf[2].pendingQueue queueBitLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + sum(packetLength(packetPushStarted)) - sum(packetLength(packetPulled)) - sum(packetLength(packetRemoved)) - sum(packetLength(packetDropped))))"
+attr title "queue bit length"
+attr unit b
+vector 28 StaticAP.accessPoint.wlan[0].mac.hcf.edca.edcaf[2].inProgressFrames queueLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(count(packetEnqueued) - count(packetDequeued))"
+attr title "queue length"
+vector 29 StaticAP.accessPoint.wlan[0].mac.hcf.edca.edcaf[2].contention backoffActive:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source warmup(count(backoffStarted)-count(backoffStopped))
+attr title "backoff active"
+vector 30 StaticAP.accessPoint.wlan[0].mac.hcf.edca.edcaf[2].txopProcedure txopActive:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source warmup(count(txopStarted)-count(txopEnded))
+attr title "txop active"
+vector 31 StaticAP.accessPoint.wlan[0].mac.hcf.edca.edcaf[3].pendingQueue queueLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + count(packetPushStarted) - count(packetPulled) - count(packetRemoved) - count(packetDropped)))"
+attr title "queue length"
+attr unit pk
+vector 32 StaticAP.accessPoint.wlan[0].mac.hcf.edca.edcaf[3].pendingQueue queueBitLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + sum(packetLength(packetPushStarted)) - sum(packetLength(packetPulled)) - sum(packetLength(packetRemoved)) - sum(packetLength(packetDropped))))"
+attr title "queue bit length"
+attr unit b
+vector 33 StaticAP.accessPoint.wlan[0].mac.hcf.edca.edcaf[3].inProgressFrames queueLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(count(packetEnqueued) - count(packetDequeued))"
+attr title "queue length"
+vector 34 StaticAP.accessPoint.wlan[0].mac.hcf.edca.edcaf[3].contention backoffActive:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source warmup(count(backoffStarted)-count(backoffStopped))
+attr title "backoff active"
+vector 35 StaticAP.accessPoint.wlan[0].mac.hcf.edca.edcaf[3].txopProcedure txopActive:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source warmup(count(txopStarted)-count(txopEnded))
+attr title "txop active"
+vector 36 StaticAP.accessPoint.eth[0].queue queueLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + count(packetPushStarted) - count(packetPulled) - count(packetRemoved) - count(packetDropped)))"
+attr title "queue length"
+attr unit pk
+vector 37 StaticAP.accessPoint.eth[0].queue queueBitLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + sum(packetLength(packetPushStarted)) - sum(packetLength(packetPulled)) - sum(packetLength(packetRemoved)) - sum(packetLength(packetDropped))))"
+attr title "queue bit length"
+attr unit b
+vector 38 StaticAP.client[0].wlan[0].mac.dcf frameSequenceActive:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source warmup(count(frameSequenceStarted)-count(frameSequenceFinished))
+attr title "frame sequence active"
+vector 39 StaticAP.client[0].wlan[0].mac.dcf.channelAccess.pendingQueue queueLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + count(packetPushStarted) - count(packetPulled) - count(packetRemoved) - count(packetDropped)))"
+attr title "queue length"
+attr unit pk
+vector 40 StaticAP.client[0].wlan[0].mac.dcf.channelAccess.pendingQueue queueBitLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + sum(packetLength(packetPushStarted)) - sum(packetLength(packetPulled)) - sum(packetLength(packetRemoved)) - sum(packetLength(packetDropped))))"
+attr title "queue bit length"
+attr unit b
+vector 41 StaticAP.client[0].wlan[0].mac.dcf.channelAccess.inProgressFrames queueLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(count(packetEnqueued) - count(packetDequeued))"
+attr title "queue length"
+vector 42 StaticAP.client[0].wlan[0].mac.dcf.channelAccess.contention backoffActive:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source warmup(count(backoffStarted)-count(backoffStopped))
+attr title "backoff active"
+vector 43 StaticAP.client[0].wlan[0].mac.hcf frameSequenceActive:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source warmup(count(frameSequenceStarted)-count(frameSequenceFinished))
+attr title "frame sequence active"
+vector 44 StaticAP.client[0].wlan[0].mac.hcf blockAckAgreementActive:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source warmup(count(blockAckAgreementAdded)-count(blockAckAgreementDeleted))
+attr title "active block ack agreements"
+vector 45 StaticAP.client[0].wlan[0].mac.hcf.edca.edcaf[0].pendingQueue queueLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + count(packetPushStarted) - count(packetPulled) - count(packetRemoved) - count(packetDropped)))"
+attr title "queue length"
+attr unit pk
+vector 46 StaticAP.client[0].wlan[0].mac.hcf.edca.edcaf[0].pendingQueue queueBitLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + sum(packetLength(packetPushStarted)) - sum(packetLength(packetPulled)) - sum(packetLength(packetRemoved)) - sum(packetLength(packetDropped))))"
+attr title "queue bit length"
+attr unit b
+vector 47 StaticAP.client[0].wlan[0].mac.hcf.edca.edcaf[0].inProgressFrames queueLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(count(packetEnqueued) - count(packetDequeued))"
+attr title "queue length"
+vector 48 StaticAP.client[0].wlan[0].mac.hcf.edca.edcaf[0].contention backoffActive:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source warmup(count(backoffStarted)-count(backoffStopped))
+attr title "backoff active"
+vector 49 StaticAP.client[0].wlan[0].mac.hcf.edca.edcaf[0].txopProcedure txopActive:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source warmup(count(txopStarted)-count(txopEnded))
+attr title "txop active"
+vector 50 StaticAP.client[0].wlan[0].mac.hcf.edca.edcaf[1].pendingQueue queueLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + count(packetPushStarted) - count(packetPulled) - count(packetRemoved) - count(packetDropped)))"
+attr title "queue length"
+attr unit pk
+vector 51 StaticAP.client[0].wlan[0].mac.hcf.edca.edcaf[1].pendingQueue queueBitLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + sum(packetLength(packetPushStarted)) - sum(packetLength(packetPulled)) - sum(packetLength(packetRemoved)) - sum(packetLength(packetDropped))))"
+attr title "queue bit length"
+attr unit b
+vector 52 StaticAP.client[0].wlan[0].mac.hcf.edca.edcaf[1].inProgressFrames queueLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(count(packetEnqueued) - count(packetDequeued))"
+attr title "queue length"
+vector 53 StaticAP.client[0].wlan[0].mac.hcf.edca.edcaf[1].contention backoffActive:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source warmup(count(backoffStarted)-count(backoffStopped))
+attr title "backoff active"
+vector 54 StaticAP.client[0].wlan[0].mac.hcf.edca.edcaf[1].txopProcedure txopActive:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source warmup(count(txopStarted)-count(txopEnded))
+attr title "txop active"
+vector 55 StaticAP.client[0].wlan[0].mac.hcf.edca.edcaf[2].pendingQueue queueLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + count(packetPushStarted) - count(packetPulled) - count(packetRemoved) - count(packetDropped)))"
+attr title "queue length"
+attr unit pk
+vector 56 StaticAP.client[0].wlan[0].mac.hcf.edca.edcaf[2].pendingQueue queueBitLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + sum(packetLength(packetPushStarted)) - sum(packetLength(packetPulled)) - sum(packetLength(packetRemoved)) - sum(packetLength(packetDropped))))"
+attr title "queue bit length"
+attr unit b
+vector 57 StaticAP.client[0].wlan[0].mac.hcf.edca.edcaf[2].inProgressFrames queueLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(count(packetEnqueued) - count(packetDequeued))"
+attr title "queue length"
+vector 58 StaticAP.client[0].wlan[0].mac.hcf.edca.edcaf[2].contention backoffActive:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source warmup(count(backoffStarted)-count(backoffStopped))
+attr title "backoff active"
+vector 59 StaticAP.client[0].wlan[0].mac.hcf.edca.edcaf[2].txopProcedure txopActive:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source warmup(count(txopStarted)-count(txopEnded))
+attr title "txop active"
+vector 60 StaticAP.client[0].wlan[0].mac.hcf.edca.edcaf[3].pendingQueue queueLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + count(packetPushStarted) - count(packetPulled) - count(packetRemoved) - count(packetDropped)))"
+attr title "queue length"
+attr unit pk
+vector 61 StaticAP.client[0].wlan[0].mac.hcf.edca.edcaf[3].pendingQueue queueBitLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + sum(packetLength(packetPushStarted)) - sum(packetLength(packetPulled)) - sum(packetLength(packetRemoved)) - sum(packetLength(packetDropped))))"
+attr title "queue bit length"
+attr unit b
+vector 62 StaticAP.client[0].wlan[0].mac.hcf.edca.edcaf[3].inProgressFrames queueLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(count(packetEnqueued) - count(packetDequeued))"
+attr title "queue length"
+vector 63 StaticAP.client[0].wlan[0].mac.hcf.edca.edcaf[3].contention backoffActive:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source warmup(count(backoffStarted)-count(backoffStopped))
+attr title "backoff active"
+vector 64 StaticAP.client[0].wlan[0].mac.hcf.edca.edcaf[3].txopProcedure txopActive:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source warmup(count(txopStarted)-count(txopEnded))
+attr title "txop active"
+vector 65 StaticAP.client[0].udp passedUpPk:vector(count) ETV
+attr interpolationmode none
+attr recordingmode vector(count)
+attr source packetSentToUpper
+attr title "packets passed up, count"
+vector 66 StaticAP.client[0].udp droppedPkWrongPort:vector(count) ETV
+attr interpolationmode none
+attr recordingmode vector(count)
+attr source packetDropReasonIsNoPortFound(packetDropped)
+attr title "packets dropped (wrong port), count"
+vector 67 StaticAP.client[0].udp droppedPkBadChecksum:vector(count) ETV
+attr interpolationmode none
+attr recordingmode vector(count)
+attr source packetDropReasonIsIncorrectlyReceived(packetDropped)
+attr title "packets dropped (checksum error), count"
+vector 68 StaticAP.internetCloud.ppp[0].queue queueLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + count(packetPushStarted) - count(packetPulled) - count(packetRemoved) - count(packetDropped)))"
+attr title "queue length"
+attr unit pk
+vector 69 StaticAP.internetCloud.ppp[0].queue queueBitLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + sum(packetLength(packetPushStarted)) - sum(packetLength(packetPulled)) - sum(packetLength(packetRemoved)) - sum(packetLength(packetDropped))))"
+attr title "queue bit length"
+attr unit b
+vector 70 StaticAP.internetCloud.ppp[1].queue queueLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + count(packetPushStarted) - count(packetPulled) - count(packetRemoved) - count(packetDropped)))"
+attr title "queue length"
+attr unit pk
+vector 71 StaticAP.internetCloud.ppp[1].queue queueBitLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + sum(packetLength(packetPushStarted)) - sum(packetLength(packetPulled)) - sum(packetLength(packetRemoved)) - sum(packetLength(packetDropped))))"
+attr title "queue bit length"
+attr unit b
+vector 72 StaticAP.serverRouter.ppp[0].queue queueLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + count(packetPushStarted) - count(packetPulled) - count(packetRemoved) - count(packetDropped)))"
+attr title "queue length"
+attr unit pk
+vector 73 StaticAP.serverRouter.ppp[0].queue queueBitLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + sum(packetLength(packetPushStarted)) - sum(packetLength(packetPulled)) - sum(packetLength(packetRemoved)) - sum(packetLength(packetDropped))))"
+attr title "queue bit length"
+attr unit b
+vector 74 StaticAP.serverRouter.ppp[1].queue queueLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + count(packetPushStarted) - count(packetPulled) - count(packetRemoved) - count(packetDropped)))"
+attr title "queue length"
+attr unit pk
+vector 75 StaticAP.serverRouter.ppp[1].queue queueBitLength:vector ETV
+attr autoWarmupFilter false
+attr interpolationmode sample-hold
+attr recordingmode vector
+attr source "warmup(atomic(constant0(packetPushEnded) + sum(packetLength(packetPushStarted)) - sum(packetLength(packetPulled)) - sum(packetLength(packetRemoved)) - sum(packetLength(packetDropped))))"
+attr title "queue bit length"
+attr unit b
+0	31886 55 0 0 1.5 1.5 5 0 0 0 0
+1	31941 55 0 0 1.5 1.5 5 0 0 0 0
+2	31996 11 0 0 1.5 1.5 1 0 0 0 0
+3	32007 11 0 0 1.5 1.5 1 0 0 0 0
+4	32018 11 0 0 1.5 1.5 1 0 0 0 0
+5	32029 55 0 0 1.5 1.5 5 0 0 0 0
+6	32084 55 0 0 1.5 1.5 5 0 0 0 0
+7	32139 55 0 0 1.5 1.5 5 0 0 0 0
+8	32194 55 0 0 1.5 1.5 5 0 0 0 0
+9	32249 22 0 0 1.5 1.5 2 0 0 0 0
+10	32271 60 0 0 1.5 1.5 5 0 0 0 0
+11	32331 60 0 0 1.5 1.5 5 0 0 0 0
+12	32391 24 0 0 1.5 1.5 2 0 0 0 0
+13	32415 24 0 0 1.5 1.5 2 0 0 0 0
+14	32439 24 0 0 1.5 1.5 2 0 0 0 0
+15	32463 24 0 0 1.5 1.5 2 0 0 0 0
+16	32487 60 0 0 1.5 1.5 5 0 0 0 0
+17	32547 60 0 0 1.5 1.5 5 0 0 0 0
+18	32607 24 0 0 1.5 1.5 2 0 0 0 0
+19	32631 24 0 0 1.5 1.5 2 0 0 0 0
+20	32655 24 0 0 1.5 1.5 2 0 0 0 0
+21	32679 60 0 0 1.5 1.5 5 0 0 0 0
+22	32739 60 0 0 1.5 1.5 5 0 0 0 0
+23	32799 24 0 0 1.5 1.5 2 0 0 0 0
+24	32823 24 0 0 1.5 1.5 2 0 0 0 0
+25	32847 24 0 0 1.5 1.5 2 0 0 0 0
+26	32871 60 0 0 1.5 1.5 5 0 0 0 0
+27	32931 60 0 0 1.5 1.5 5 0 0 0 0
+28	32991 24 0 0 1.5 1.5 2 0 0 0 0
+29	33015 24 0 0 1.5 1.5 2 0 0 0 0
+30	33039 24 0 0 1.5 1.5 2 0 0 0 0
+31	33063 60 0 0 1.5 1.5 5 0 0 0 0
+32	33123 60 0 0 1.5 1.5 5 0 0 0 0
+33	33183 24 0 0 1.5 1.5 2 0 0 0 0
+34	33207 24 0 0 1.5 1.5 2 0 0 0 0
+35	33231 24 0 0 1.5 1.5 2 0 0 0 0
+36	33255 60 0 0 1.5 1.5 5 0 0 0 0
+37	33315 60 0 0 1.5 1.5 5 0 0 0 0
+38	33375 24 0 0 1.5 1.5 2 0 0 0 0
+39	33399 60 0 0 1.5 1.5 5 0 0 0 0
+40	33459 60 0 0 1.5 1.5 5 0 0 0 0
+41	33519 24 0 0 1.5 1.5 2 0 0 0 0
+42	33543 24 0 0 1.5 1.5 2 0 0 0 0
+43	33567 24 0 0 1.5 1.5 2 0 0 0 0
+44	33591 24 0 0 1.5 1.5 2 0 0 0 0
+45	33615 60 0 0 1.5 1.5 5 0 0 0 0
+46	33675 60 0 0 1.5 1.5 5 0 0 0 0
+47	33735 24 0 0 1.5 1.5 2 0 0 0 0
+48	33759 24 0 0 1.5 1.5 2 0 0 0 0
+49	33783 24 0 0 1.5 1.5 2 0 0 0 0
+50	33807 60 0 0 1.5 1.5 5 0 0 0 0
+51	33867 60 0 0 1.5 1.5 5 0 0 0 0
+52	33927 24 0 0 1.5 1.5 2 0 0 0 0
+53	33951 24 0 0 1.5 1.5 2 0 0 0 0
+54	33975 24 0 0 1.5 1.5 2 0 0 0 0
+55	33999 60 0 0 1.5 1.5 5 0 0 0 0
+56	34059 60 0 0 1.5 1.5 5 0 0 0 0
+57	34119 24 0 0 1.5 1.5 2 0 0 0 0
+58	34143 24 0 0 1.5 1.5 2 0 0 0 0
+59	34167 24 0 0 1.5 1.5 2 0 0 0 0
+60	34191 60 0 0 1.5 1.5 5 0 0 0 0
+61	34251 60 0 0 1.5 1.5 5 0 0 0 0
+62	34311 24 0 0 1.5 1.5 2 0 0 0 0
+63	34335 24 0 0 1.5 1.5 2 0 0 0 0
+64	34359 24 0 0 1.5 1.5 2 0 0 0 0
+65	34383 12 0 0 1.5 1.5 1 0 0 0 0
+66	34395 12 0 0 1.5 1.5 1 0 0 0 0
+67	34407 12 0 0 1.5 1.5 1 0 0 0 0
+68	34419 60 0 0 1.5 1.5 5 0 0 0 0
+69	34479 60 0 0 1.5 1.5 5 0 0 0 0
+70	34539 60 0 0 1.5 1.5 5 0 0 0 0
+71	34599 60 0 0 1.5 1.5 5 0 0 0 0
+72	34659 60 0 0 1.5 1.5 5 0 0 0 0
+73	34719 60 0 0 1.5 1.5 5 0 0 0 0
+74	34779 60 0 0 1.5 1.5 5 0 0 0 0
+75	34839 60 0 0 1.5 1.5 5 0 0 0 0
+
