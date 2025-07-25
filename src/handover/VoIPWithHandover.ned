@@ -115,6 +115,9 @@ module VoIPReceiverWithHandover extends CustomVoipReceiver like IApp
         bool enableSessionContinuity = default(true);
         double jitterBufferSize @unit(s) = default(150ms);
         double handoverTimeout @unit(s) = default(2s);
+         bool enableInterfaceMonitoring = default(true);
+        double rssiUpdateInterval @unit(s) = default(0.5s);
+        string preferredInterface @enum("wifi","lte","auto") = default("auto");
         
         // Adaptive jitter buffer parameters
         bool enableAdaptiveJitterBuffer = default(true);

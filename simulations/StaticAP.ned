@@ -28,8 +28,8 @@ network StaticAP
     parameters:
         int numUe = default(1);
         @display("bgb=1200,700");
-        
-         types:
+
+    types:
         channel C extends DatarateChannel
         {
             delay = 2ms;
@@ -70,8 +70,8 @@ network StaticAP
         }
 
         // WiFi Clients (using standard WirelessHost instead of DualUe)
-        client[numUe]: WirelessHost {
-            @display("p=500,500");
+        ue[numUe]: WirelessHost {
+            @display("p=500,500;i=device/pocketpc");
         }
 
 
@@ -86,6 +86,6 @@ network StaticAP
     connections:
         wifiRouter.pppg++ <--> Eth10G <--> internetCloud.pppg++;
         wifiRouter.ethg++ <--> Eth10G <--> accessPoint.ethg++;
-       serverRouter.pppg++  <--> Eth10G <--> internetCloud.pppg++;
+        serverRouter.pppg++ <--> Eth10G <--> internetCloud.pppg++;
         serverRouter.pppg++ <--> Eth10G <--> server.pppg++;
 }

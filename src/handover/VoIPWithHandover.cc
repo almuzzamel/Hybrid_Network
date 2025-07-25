@@ -383,57 +383,29 @@ void VoIPReceiverWithHandover::initialize(int stage)
 }
 
 
-void VoIPReceiverWithHandover::handleMessage(cMessage *msg)
-{
-    if (msg == handoverTimeoutTimer) {
-        handleHandoverTimeout();
-    }
-    else if (Packet *packet = dynamic_cast<Packet*>(msg)) {
-        if (enableSessionContinuity) {
-            processReceivedPacket(packet);
-        }
-        else {
-            CustomVoipReceiver::handleMessage(msg);
-        }
-    }
-    else {
-        CustomVoipReceiver::handleMessage(msg);
-    }
-}
-void VoIPReceiverWithHandover::extractSenderInfo(Packet *packet)
-{
-    // Extract sender information from packet headers
 
-    // Get the L3 address tag to extract source address
+
+void VoIPReceiverWithHandover::processReceivedPacket(Packet *packet)
+{
+    lastPacketReceived = simTime();
+
+    // Get sender info directly here
     auto l3AddressTag = packet->getTag<L3AddressInd>();
     if (l3AddressTag) {
         srcAddress = l3AddressTag->getSrcAddress();
     }
+    srcPort = par("destPort").intValue(); // Just use the destination port
 
-    // Get the UDP header to extract source port
-    auto udpHeader = packet->peekAtFront<UdpHeader>();
-    if (udpHeader) {
-        srcPort = udpHeader->getSrcPort();
+    // Reset handover timeout
+
+    if (handoverTimeoutTimer->isScheduled()) {
+        cancelEvent(handoverTimeoutTimer);
     }
-}
-
-void VoIPReceiverWithHandover::processReceivedPacket(Packet *packet)
-{
-
-        lastPacketReceived = simTime();
-
-        // Extract sender information from packet
-        extractSenderInfo(packet);
-
-        // Reset handover timeout
-        if (handoverTimeoutTimer->isScheduled()) {
-            cancelEvent(handoverTimeoutTimer);
-        }
 
     scheduleAt(simTime() + handoverTimeout, handoverTimeoutTimer);
 
-    // Extract sequence number
     int seqNum = extractSequenceNumber(packet);
+
 
     // Check for duplicates
     if (receivedPackets.find(seqNum) != receivedPackets.end()) {

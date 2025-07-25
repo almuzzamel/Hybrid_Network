@@ -1,18 +1,10 @@
-<?xml version="1.0"?>
 <internetCloud symmetric="true">
-  <parameters>
-    <delayer module="ipv4Delayer">
-      <delay type="normal" mean="0.05s" deviation="0.005s" />
-    </delayer>
+  <parameters name="good">
+    <traffic src="router1" dest="router3" delay="2ms+truncnormal(10ms,5ms)" datarate="uniform(480kbps,5Mbps)" drop="uniform(0,1) &lt; 0.01" />
+        <traffic src="router2" dest="router3" delay="2ms+truncnormal(10ms,5ms)" datarate="uniform(480kbps,5Mbps)" drop="uniform(0,1) &lt; 0.01" />
+    
+<!--
+    <traffic src="**" dest="**" delay="10ms+truncnormal(100ms,20ms)" datarate="uniform(100kbps,500kbps)" drop="uniform(0,1) &lt; uniform(0.01, 0.05)" />
+-->
   </parameters>
-  <routing>
-    <router id="10.1.1.1"> <!-- server -->
-      <route destination="10.7.1.0" netmask="255.255.255.0" gateway="10.1.1.2" />
-      <route destination="10.8.1.0" netmask="255.255.255.0" gateway="10.1.1.2" />
-    </router>
-    <router id="10.1.1.2"> <!-- router0 -->
-      <route destination="10.7.1.0" netmask="255.255.255.0" gateway="10.2.1.2" />
-      <route destination="10.8.1.0" netmask="255.255.255.0" gateway="10.3.1.2" />
-    </router>
-  </routing>
 </internetCloud>

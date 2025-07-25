@@ -36,8 +36,8 @@ import inet.applications.contract.IApp;
 simple CustomVoipSender like IApp
 {
     parameters:
-        int localPort = default(1000);
-        int destPort;
+        int localPort = default(-1);
+        int destPort =default(3000);
         string destAddress;
         int talkPacketSize @unit(B) = default(40B);     // size of talk packets in bytes
         volatile double talkspurtDuration @unit(s) = default(weibull(1.423s, 0.824s));

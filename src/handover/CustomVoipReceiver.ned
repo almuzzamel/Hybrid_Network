@@ -27,7 +27,7 @@ import inet.applications.contract.IApp;
 simple CustomVoipReceiver like IApp
 {
     parameters:
-        int localPort;
+        int localPort = default(3000);
         int emodelIe = default(5);        // Equipment impairment factor
         int emodelBpl = default(10);      // Packet-loss robustness factor
         int emodelA = default(5);         // Advantage factor

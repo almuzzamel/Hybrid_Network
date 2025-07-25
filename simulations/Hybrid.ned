@@ -1,17 +1,3 @@
-//
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU Lesser General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-// 
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU Lesser General Public License for more details.
-// 
-// You should have received a copy of the GNU Lesser General Public License
-// along with this program.  If not, see http://www.gnu.org/licenses/.
-// 
 
 package abcd.simulations;
 
@@ -84,7 +70,7 @@ network Hybrid
             @display("p=311.2981,60.576927;is=n;i=device/server");
         }
         router2: Router {
-            @display("p=1036.5386,255.76926;i=device/smallrouter");
+            @display("p=881.73083,270.91348;i=device/smallrouter");
         }
         pgw: PgwStandard {
             @display("p=1364.6636,257.45193;is=l");
@@ -93,13 +79,13 @@ network Hybrid
             @display("p=1549.7598,528.3654;is=vl");
         }
         ue[numUe]: DualUe {
-            @display("p=466.1058,735.3366");
+            @display("p=535.0962,721.87506");
         }
         internetCloud: InternetCloud {
             @display("p=668.0289,60.576927");
         }
         router1: Router {
-            @display("p=311.2981,255.76926;i=device/smallrouter");
+            @display("p=447.5962,284.37503;i=device/smallrouter");
         }
         accessPoint: AccessPoint {
             @display("p=302.88464,585.57697");
@@ -107,16 +93,15 @@ network Hybrid
         radioMedium: RadioMedium {
             @display("p=40.16,335.336");
         }
-        router0: Router {
-            @display("p=698.3174,255.76926;i=device/smallrouter");
+        router3: Router {
+            @display("p=496.39426,58.894234;i=device/smallrouter");
         }
-        
     connections:
-        server.pppg++ <--> Eth10G <--> internetCloud.pppg++;
-        internetCloud.pppg++ <--> Eth10G <--> router0.pppg++;
-        router0.ethg++ <--> Eth10G <--> router2.ethg++;
-        router0.ethg++ <--> Eth10G <--> router1.ethg++;
         router1.ethg++ <--> Eth10G <--> accessPoint.ethg++;
         router2.pppg++ <--> Eth10G <--> pgw.filterGate;
         pgw.pppg++ <--> Eth10G <--> eNB.ppp;
+        internetCloud.pppg++ <--> Eth10G <--> router3.pppg++;
+        router3.pppg++ <--> Eth10G <--> server.pppg++;
+        router1.pppg++ <--> Eth10G <--> internetCloud.pppg++;
+        router2.pppg++ <--> Eth10G <--> internetCloud.pppg++;
 }

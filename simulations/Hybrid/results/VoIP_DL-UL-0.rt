@@ -1,12 +1,46 @@
-+R #0  0s  Hybrid.server  <unspec>  127.0.0.0/8  <unspec>  lo0
-+R #0  0s  Hybrid.router2  <unspec>  127.0.0.0/8  <unspec>  lo0
-+R #0  0s  Hybrid.pgw  <unspec>  127.0.0.0/8  <unspec>  lo0
-+R #0  0s  Hybrid.ue[0]  <unspec>  127.0.0.0/8  <unspec>  lo0
-+R #0  0s  Hybrid.router1  <unspec>  127.0.0.0/8  <unspec>  lo0
-+R #0  0s  Hybrid.router0  <unspec>  127.0.0.0/8  <unspec>  lo0
-*I  #0  0s  Hybrid.router2  ppp0 <unspec>
-*I  #0  0s  Hybrid.router2  ppp0 <unspec>
-*I  #0  0s  Hybrid.router2  eth0 <unspec>
-*I  #0  0s  Hybrid.router2  eth0 <unspec>
-*I  #0  0s  Hybrid.router1  eth0 <unspec>
-*I  #0  0s  Hybrid.router1  eth0 <unspec>
++R #0  0s  Hybrid.server  10.0.0.1  127.0.0.0/8  <unspec>  lo0
++R #0  0s  Hybrid.server  10.0.0.1  10.0.0.0/24  <unspec>  ppp0
++R #0  0s  Hybrid.router2  10.0.2.1  127.0.0.0/8  <unspec>  lo0
++R #0  0s  Hybrid.router2  10.0.2.1  10.0.1.0/24  <unspec>  ppp0
++R #0  0s  Hybrid.router2  10.0.2.1  10.0.2.0/24  <unspec>  ppp1
++R #0  0s  Hybrid.pgw  10.0.3.1  127.0.0.0/8  <unspec>  lo0
++R #0  0s  Hybrid.pgw  10.0.3.1  10.0.3.0/24  <unspec>  ppp0
++R #0  0s  Hybrid.pgw  10.0.3.1  10.0.1.0/24  <unspec>  pppIf
++R #0  0s  Hybrid.eNB  10.0.5.1  10.0.4.0/24  <unspec>  cellular
++R #0  0s  Hybrid.eNB  10.0.5.1  10.0.3.0/24  <unspec>  pppIf
++R #0  0s  Hybrid.eNB  10.0.5.1  10.0.5.0/24  <unspec>  pppMEHostIf
++R #0  0s  Hybrid.ue[0]  10.0.4.3  <unspec>/0  10.0.0.2  cellular
++R #0  0s  Hybrid.ue[0]  10.0.4.3  127.0.0.0/8  <unspec>  lo0
++R #0  0s  Hybrid.ue[0]  10.0.4.3  10.0.4.0/24  <unspec>  cellular
++R #0  0s  Hybrid.internetCloud  10.0.7.1  10.0.6.0/24  <unspec>  ppp0
++R #0  0s  Hybrid.internetCloud  10.0.7.1  10.0.7.0/24  <unspec>  ppp1
++R #0  0s  Hybrid.internetCloud  10.0.7.1  10.0.2.0/24  <unspec>  ppp2
++R #0  0s  Hybrid.router1  10.0.7.2  127.0.0.0/8  <unspec>  lo0
++R #0  0s  Hybrid.router1  10.0.7.2  10.0.7.0/24  <unspec>  ppp0
++R #0  0s  Hybrid.router1  10.0.7.2  10.0.4.0/24  <unspec>  eth0
++R #0  0s  Hybrid.router3  10.0.6.2  127.0.0.0/8  <unspec>  lo0
++R #0  0s  Hybrid.router3  10.0.6.2  10.0.6.0/24  <unspec>  ppp0
++R #0  0s  Hybrid.router3  10.0.6.2  10.0.0.0/24  <unspec>  ppp1
+*I  #0  0s  Hybrid.router2  ppp0 10.0.1.1
+*I  #0  0s  Hybrid.router2  ppp0 10.0.1.1
+*I  #0  0s  Hybrid.router1  eth0 10.0.4.4
+*I  #0  0s  Hybrid.router1  eth0 10.0.4.4
+*I  #0  0s  Hybrid.router3  ppp0 10.0.6.2
+*I  #0  0s  Hybrid.router3  ppp0 10.0.6.2
+-R #11211  1.1s  Hybrid.ue[0]  10.0.4.3  10.0.4.0/24  <unspec>  cellular
+-R #11211  1.1s  Hybrid.ue[0]  10.0.4.3  127.0.0.0/8  <unspec>  lo0
++R #11211  1.1s  Hybrid.ue[0]  10.0.4.3  127.0.0.0/8  <unspec>  lo0
++R #11211  1.1s  Hybrid.ue[0]  10.0.4.3  10.0.4.0/24  <unspec>  cellular
+-R #11211  1.1s  Hybrid.ue[0]  10.0.4.3  10.0.4.0/24  <unspec>  cellular
+-R #11211  1.1s  Hybrid.ue[0]  10.0.4.3  127.0.0.0/8  <unspec>  lo0
++R #11211  1.1s  Hybrid.ue[0]  10.0.4.3  127.0.0.0/8  <unspec>  lo0
+-R #11211  1.1s  Hybrid.ue[0]  10.0.4.3  10.0.2.1/32  10.0.4.1  cellular
+-R #11211  1.1s  Hybrid.ue[0]  10.0.4.3  10.0.5.1/32  10.0.4.1  cellular
+-R #11211  1.1s  Hybrid.ue[0]  10.0.4.3  10.0.1.0/30  10.0.4.1  cellular
+-R #11211  1.1s  Hybrid.ue[0]  10.0.4.3  10.0.3.0/30  10.0.4.1  cellular
+-R #11211  1.1s  Hybrid.ue[0]  10.0.4.3  10.0.4.0/29  <unspec>  cellular
+-R #11211  1.1s  Hybrid.ue[0]  10.0.4.3  10.0.0.0/21  10.0.4.4  cellular
+-R #11211  1.1s  Hybrid.ue[0]  10.0.4.3  <unspec>/0  10.0.0.2  cellular
+-R #11211  1.1s  Hybrid.ue[0]  10.0.4.3  127.0.0.0/8  <unspec>  lo0
++R #11211  1.1s  Hybrid.ue[0]  10.0.4.3  127.0.0.0/8  <unspec>  lo0
++R #11211  1.1s  Hybrid.ue[0]  10.0.4.3  <unspec>/0  192.168.1.1  wlan0

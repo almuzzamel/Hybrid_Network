@@ -1,45 +1,52 @@
 //
-// Handover Manager Module
-// Manages handover decisions between LTE and WiFi interfaces
+// HandoverManager.ned
+// Handover management module for dual-interface UE
 //
 
 package abcd.handover;
 
-
+//
+// HandoverManager handles the automatic switching between LTE and WiFi interfaces
+// based on signal strength measurements and configured thresholds.
+//
 simple HandoverManager
 {
     parameters:
-        @class(HandoverManager);
         @display("i=block/control");
         
-        // Measurement parameters
-        double measurementInterval @unit(s) = default(1s);
+        string interfaceTableModule = default("^.interfaceTable");
+        string routingTableModule = default("^.ipv4.routingTable");
         
-        // Handover thresholds
-        double lteRsrpThreshold @unit(dBm) = default(-100dBm);
-        double wifiRssiThreshold @unit(dBm) = default(-70dBm);
-        double hysteresis @unit(dB) = default(3dB);
+        // Measurement and decision parameters
+        double measurementInterval @unit(s) = default(1s);  // How often to check signal strength
+        double lteRsrpThreshold @unit(dBm) = default(-80dBm);  // RSRP threshold for LTE
+        double wifiRssiThreshold @unit(dBm) = default(-70dBm);  // RSSI threshold for WiFi
+        double hysteresis @unit(dB) = default(5dB);  // Hysteresis to avoid ping-pong effect
+        double handoverDelay @unit(s) = default(0.1s);  // Delay before executing handover
         
-        // Handover delays
-        double handoverDelay @unit(s) = default(0.1s);
-        double measurementDelay @unit(s) = default(0.05s);
-        
-        // Interface priorities (lower number = higher priority)
-        int ltePriority = default(1);
-        int wifiPriority = default(2);
-        
-    string interfaceTableModule;  // For accessing interface table
-    string routingTableModule;    // For accessing routing table
-        
+        // Interface priorities (higher = more preferred)
+        int ltePriority = default(10);
+        int wifiPriority = default(20);  // Default prefer WiFi when available
         
         // Enable/disable specific handover types
-        bool enableLteToWifi = default(true);
-        bool enableWifiToLte = default(true);
+        bool enableLteToWifi = default(true);  // Allow switching from LTE to WiFi
+        bool enableWifiToLte = default(true);  // Allow switching from WiFi to LTE
         
-        // Logging
+        // Logging options
         bool logHandovers = default(true);
-        string logFile = default("handover.log");
+        string logFile = default("handovers.csv");
         
+        // Signals and statistics
+        @signal[lteToWifiHandover](type=long);
+        @signal[wifiToLteHandover](type=long);
+        @signal[lteRsrp](type=double);
+        @signal[wifiRssi](type=double);
+        
+        @statistic[lteToWifiHandover](title="LTE to WiFi handovers"; record=count; interpolationmode=none);
+        @statistic[wifiToLteHandover](title="WiFi to LTE handovers"; record=count; interpolationmode=none);
+        @statistic[lteRsrp](title="LTE RSRP measurements"; record=vector; interpolationmode=linear);
+        @statistic[wifiRssi](title="WiFi RSSI measurements"; record=vector; interpolationmode=linear);
+
     gates:
-        // No gates needed - communicates via direct method calls
+        // No direct gate connections needed - HandoverManager communicates by direct method calls
 }

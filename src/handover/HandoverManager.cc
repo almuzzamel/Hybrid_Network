@@ -62,15 +62,13 @@ void HandoverManager::initialize(int stage)
         routingTable = getModuleFromPar<IRoutingTable>(par("routingTableModule"), this);
 
         // DEBUG: Print all interfaces with available info
-        printf("=== DEBUG: Available interfaces ===\n");
+        EV_DEBUG << "=== DEBUG: Available interfaces ===" << endl;
         for (int i = 0; i < interfaceTable->getNumInterfaces(); i++) {
             NetworkInterface *iface = interfaceTable->getInterface(i);
-            printf("Interface %d: '%s' (ID: %d)\n",
-                   i,
-                   iface->getInterfaceName(),
-                   iface->getInterfaceId());
+            EV_DEBUG << "Interface " << i << ": '" << iface->getInterfaceName()
+                     << "' (ID: " << iface->getInterfaceId() << ")" << endl;
         }
-        printf("=== END DEBUG ===\n");
+        EV_DEBUG << "=== END DEBUG ===" << endl;
 
         // Find LTE and WiFi interfaces based on name patterns
         lteInterface = nullptr;
@@ -90,7 +88,7 @@ void HandoverManager::initialize(int stage)
                 strstr(name, "LTE") != nullptr ||
                 strstr(name, "cell") != nullptr) {
                 lteInterface = iface;
-                printf("Found LTE interface: %s\n", name);
+                EV_INFO << "Found LTE interface: " << name << endl;
             }
             // WiFi interface detection - common patterns
             else if (strstr(name, "wlan") != nullptr ||
@@ -98,18 +96,26 @@ void HandoverManager::initialize(int stage)
                      strstr(name, "WiFi") != nullptr ||
                      strstr(name, "80211") != nullptr) {
                 wifiInterface = iface;
-                printf("Found WiFi interface: %s\n", name);
+                EV_INFO << "Found WiFi interface: " << name << endl;
             }
         }
 
         if (!lteInterface || !wifiInterface) {
-            printf("ERROR: LTE found: %s, WiFi found: %s\n",
-                   lteInterface ? lteInterface->getInterfaceName() : "NO",
-                   wifiInterface ? wifiInterface->getInterfaceName() : "NO");
+            EV_ERROR << "ERROR: LTE found: " << (lteInterface ? lteInterface->getInterfaceName() : "NO")
+                   << ", WiFi found: " << (wifiInterface ? wifiInterface->getInterfaceName() : "NO") << endl;
             throw cRuntimeError("Could not find both LTE and WiFi interfaces");
         }
 
-        printf("Successfully found both interfaces!\n");
+        EV_INFO << "Successfully found both interfaces!" << endl;
+
+        // Start the measurement timer to periodically check signal strengths
+        measurementTimer = new cMessage("measurementTimer");
+        scheduleAt(simTime() + measurementInterval, measurementTimer);
+
+        // Initially set LTE as the active interface
+        setActiveInterface(LTE_INTERFACE);
+
+        EV_INFO << "HandoverManager initialized and measurements started" << endl;
     }
 }
 
@@ -159,21 +165,38 @@ HandoverManager::InterfaceType HandoverManager::makeHandoverDecision(double lteR
     double wifiThreshold = (currentActiveInterface == WIFI_INTERFACE) ?
                           wifiRssiThreshold - hysteresis : wifiRssiThreshold + hysteresis;
 
-    // Handover decision logic
-    if (currentActiveInterface == LTE_INTERFACE) {
-        // Currently on LTE, check if should switch to WiFi
-        if (enableLteToWifi && wifiRssi > wifiThreshold && lteRsrp < lteThreshold) {
+    // Debug output
+    EV_DEBUG << "Current interface: " << interfaceTypeToString(currentActiveInterface)
+             << ", LTE RSRP: " << lteRsrp << " dBm (threshold: " << lteThreshold << " dBm)"
+             << ", WiFi RSSI: " << wifiRssi << " dBm (threshold: " << wifiThreshold << " dBm)" << endl;
+
+    // Enhanced handover decision logic with interface priorities
+    if (wifiRssi > wifiThreshold) {
+        // WiFi signal is good
+        if (currentActiveInterface == LTE_INTERFACE && enableLteToWifi) {
+            // Currently on LTE, switch to WiFi since it has good signal
             bestInterface = WIFI_INTERFACE;
             EV_INFO << "Handover decision: LTE->WiFi (RSRP: " << lteRsrp
-                    << ", RSSI: " << wifiRssi << ")" << endl;
+                    << ", RSSI: " << wifiRssi << ") - Good WiFi signal detected" << endl;
         }
-    }
-    else if (currentActiveInterface == WIFI_INTERFACE) {
-        // Currently on WiFi, check if should switch to LTE
-        if (enableWifiToLte && (wifiRssi < wifiThreshold || lteRsrp > lteThreshold)) {
+    } else {
+        // WiFi signal is poor or not available
+        if (currentActiveInterface == WIFI_INTERFACE && enableWifiToLte && lteRsrp > lteThreshold) {
+            // Currently on WiFi but signal is poor, switch to LTE if it has good signal
             bestInterface = LTE_INTERFACE;
             EV_INFO << "Handover decision: WiFi->LTE (RSRP: " << lteRsrp
-                    << ", RSSI: " << wifiRssi << ")" << endl;
+                    << ", RSSI: " << wifiRssi << ") - Poor WiFi signal" << endl;
+        }
+    }
+
+    // Advanced decision logic: If both signals are good, use priority
+    if (wifiRssi > wifiThreshold && lteRsrp > lteThreshold) {
+        if (wifiPriority > ltePriority) {
+            bestInterface = WIFI_INTERFACE;
+            EV_INFO << "Both signals good, selecting WiFi based on priority" << endl;
+        } else {
+            bestInterface = LTE_INTERFACE;
+            EV_INFO << "Both signals good, selecting LTE based on priority" << endl;
         }
     }
 
@@ -242,9 +265,26 @@ void HandoverManager::setActiveInterface(InterfaceType interfaceType)
 
 void HandoverManager::updateRouting(NetworkInterface *activeInterface, NetworkInterface *inactiveInterface)
 {
+    // Set the active interface up and inactive interface down
+    // This is the key function that will enable/disable interfaces based on signal
+
+    // First, set interface state (up/down)
+    if (activeInterface == lteInterface && inactiveInterface == wifiInterface) {
+        // When switching to LTE, turn off WiFi
+        lteInterface->setState(NetworkInterface::UP);
+        wifiInterface->setState(NetworkInterface::DOWN);
+        EV_INFO << "Turned LTE interface ON and WiFi interface OFF" << endl;
+    }
+    else if (activeInterface == wifiInterface && inactiveInterface == lteInterface) {
+        // When switching to WiFi, turn off LTE
+        wifiInterface->setState(NetworkInterface::UP);
+        lteInterface->setState(NetworkInterface::DOWN);
+        EV_INFO << "Turned WiFi interface ON and LTE interface OFF" << endl;
+    }
+
     // Remove old default route
     for (int i = routingTable->getNumRoutes() - 1; i >= 0; i--) {
-        // FIX: Cast IRoute to Ipv4Route
+        // Cast IRoute to Ipv4Route
         Ipv4Route *route = dynamic_cast<Ipv4Route*>(routingTable->getRoute(i));
         if (!route) continue; // Skip non-IPv4 routes
 
@@ -272,13 +312,17 @@ void HandoverManager::updateRouting(NetworkInterface *activeInterface, NetworkIn
     }
 
     routingTable->addRoute(defaultRoute);
+
+    // Log interface change for applications to observe
+    EV_INFO << "Interface change notification: Now using "
+            << interfaceTypeToString(currentActiveInterface) << " interface" << endl;
 }
 
 double HandoverManager::getLteRsrp()
 {
     // Get LTE PHY module and extract RSRP
     cModule *host = getContainingNode(this);
-    cModule *lteNic = host->getSubmodule("lteNic");
+    cModule *lteNic = host->getSubmodule("cellularNic");
     if (!lteNic) return -150.0; // Very poor signal if no LTE
 
     cModule *ltePhy = lteNic->getSubmodule("phy");
@@ -287,10 +331,19 @@ double HandoverManager::getLteRsrp()
     // Try to get RSRP from LTE PHY layer
     LtePhyUe *phyUe = dynamic_cast<LtePhyUe*>(ltePhy);
     if (phyUe) {
-        // FIX: Since getRsrp() doesn't exist, use simulation fallback
-        // If you implement getRsrp() in LtePhyUe, you can use:
-        // return phyUe->getRsrp();
-        return simulateRsrpFromDistance();
+        // Get the current master RSSI directly from the UE PHY
+        // This value is updated during handover consideration and whenever
+        // broadcasts are received from the current master eNB
+        double rsrp = phyUe->getCurrentMasterRssi();
+
+        // Check if we have a valid RSRP measurement
+        if (rsrp > -990.0) {  // -999.0 is the initialization value
+            EV_DEBUG << "Using real RSRP measurement from LtePhyUe: " << rsrp << " dBm" << endl;
+            return rsrp;
+        }
+        else {
+            EV_DEBUG << "No valid RSRP measurement available, using simulation" << endl;
+        }
     }
 
     // Fallback: simulate RSRP based on distance
@@ -301,24 +354,48 @@ double HandoverManager::getWifiRssi()
 {
     // Get WiFi management module and extract RSSI
     cModule *host = getContainingNode(this);
-    cModule *wlan = host->getSubmodule("wlan");
+    cModule *wlan = host->getSubmodule("wlan", 0);
     if (!wlan) return -100.0; // Very poor signal if no WiFi
 
-    cModule *mgmt = wlan->getSubmodule("mgmt");
-    if (!mgmt) return -100.0;
-
-    // Try to get RSSI from WiFi management
-    Ieee80211MgmtSta *mgmtSta = dynamic_cast<Ieee80211MgmtSta*>(mgmt);
-    if (mgmtSta) {
-        // FIX: Use getAssociatedAp() to get signal strength
-        const auto *apInfo = mgmtSta->getAssociatedAp();
-        if (apInfo) {
-            return apInfo->rxPower; // This gives you the received power in dBm
+    // First try to get the radio module which might have signal strength info
+    cModule *radio = wlan->getSubmodule("radio");
+    if (radio) {
+        // Try to access RSSI from the radio's reception state if available
+        cModule *receptionState = radio->getSubmodule("receptionState");
+        if (receptionState) {
+            // Some radio models store the current RSSI/SINR in the reception state
+            // This is implementation-specific, so we need to check what's available
+            cProperty *rssiProp = receptionState->getProperties()->get("rssi");
+            if (rssiProp) {
+                const char* rssiStr = rssiProp->getValue(0);
+                if (rssiStr) {
+                    double rssi = atof(rssiStr);
+                    if (rssi != 0) {
+                        EV_DEBUG << "Using RSSI from radio reception state: " << rssi << " dBm" << endl;
+                        return rssi;
+                    }
+                }
+            }
         }
-        return -100.0; // Default poor signal if not associated
     }
 
-    // Fallback: simulate RSSI based on distance
+    // Try to get RSSI from WiFi management
+    cModule *mgmt = wlan->getSubmodule("mgmt");
+    if (mgmt) {
+        Ieee80211MgmtSta *mgmtSta = dynamic_cast<Ieee80211MgmtSta*>(mgmt);
+        if (mgmtSta) {
+            const auto *apInfo = mgmtSta->getAssociatedAp();
+            if (apInfo) {
+                EV_DEBUG << "Using RSSI from IEEE 802.11 management: " << apInfo->rxPower << " dBm" << endl;
+                return apInfo->rxPower; // This gives you the received power in dBm
+            }
+            EV_DEBUG << "WiFi not associated with any AP, using poor signal value" << endl;
+            return -95.0; // Default poor signal if not associated
+        }
+    }
+
+    // If we couldn't get a real measurement, fall back to simulation
+    EV_DEBUG << "No WiFi management module found, using simulated RSSI" << endl;
     return simulateRssiFromDistance();
 }
 

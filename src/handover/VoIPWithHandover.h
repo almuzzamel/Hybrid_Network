@@ -127,7 +127,6 @@ class VoIPReceiverWithHandover : public CustomVoipReceiver
 
   protected:
     virtual void initialize(int stage) override;
-    virtual void handleMessage(cMessage *msg) override;
     virtual void finish() override;
 
     // Enhanced VoIP functions
@@ -136,7 +135,6 @@ class VoIPReceiverWithHandover : public CustomVoipReceiver
     virtual void sendAckPacket(int seqNum);
     virtual void reorderAndPlayPackets();
     virtual void handleHandoverTimeout();
-    virtual void extractSenderInfo(Packet *packet);  // Added helper method
 
   public:
     VoIPReceiverWithHandover() : CustomVoipReceiver() {
